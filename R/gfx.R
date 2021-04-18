@@ -120,12 +120,12 @@ clear_pic <- function(G, y) {
 ################################################################################
 # Get the ANSI colour string, and possibly set it as well.
 
-get_colour <- function(colour) {
-  sprintf("\033[38;5;%dm", colour)
+get_colour <- function(fg, bg = 0) {
+  sprintf("\033[38;5;%d;48;5;%dm", fg, bg)
 }
 
-set_colour <- function(colour) {
-  cat(get_colour(colour))
+set_colour <- function(fg, bg = 0) {
+  cat(get_colour(fg, bg))
 }
 
 ################################################################################
