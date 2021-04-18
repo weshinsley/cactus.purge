@@ -57,6 +57,15 @@ fade_text <- function(G, x, y, text, cols, fade_mode,
     }
     Sys.sleep(fade_speed)
   }
+
+  # Erase afterwards...
+
+  text <- paste(rep(" ", nchar(crayon::strip_style(text))), collapse = "")
+  G$cursor %<>% write_at(x, y, text)
+  if (triple) {
+    G$cursor %<>% write_at(x, y - 1, text)
+    G$cursor %<>% write_at(x, y + 1, text)
+  }
   G
 }
 
