@@ -262,6 +262,7 @@ get_input <- function(G, x, y, max_len, col = 216, dotcol = 255) {
 
 stop_quietly <- function() {
   opt <- options(show.error.messages = FALSE)
+  keypress::restore_term_status()
   on.exit(options(opt))
   stop()
 }
