@@ -254,19 +254,6 @@ get_input <- function(G, x, y, max_len, col = 216, dotcol = 255) {
   G
 }
 
-################################################################################
-# Windows command prompt seems to support ANSI nicely - most of the time. I had
-# a period where it worked beautifully. Then it stopped. It started working
-# when I added the registry key below - which I had never added before... So
-# this on windows checks whether the key is present and offers to add if not.
-
-stop_quietly <- function() {
-  opt <- options(show.error.messages = FALSE)
-  keypress::restore_term_status()
-  on.exit(options(opt))
-  stop()
-}
-
 check_windows_ansi <- function() {
 
   if (.Platform$OS.type != "windows") {
@@ -288,14 +275,14 @@ check_windows_ansi <- function() {
     }
     if (x == "2") {
       message("\nNo changes made.")
-      stop_quietly()
+      stop()
     }
 
     s <- "cmd /c REG ADD HKCU\\CONSOLE /f /v VirtualTerminalLevel /t REG_DWORD /d 1"
     suppressWarnings(res <- paste(system(s, intern = TRUE), collapse = ""))
     message("\nDone - you'll need to start a new Command Prompt window before")
     message("the changes take effect.\n")
-    stop_quietly()
+    stop()
   }
 }
 

@@ -1,5 +1,3 @@
 #!/usr/bin/env Rscript
-keypress::save_term_status()
-keypress::set_term_echo(FALSE)
 source("R/main.R")
 launch()

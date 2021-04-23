@@ -21,13 +21,14 @@ main_title <- function(G) {
 
   G %<>% fade_text(30, 20, instr1, GREY_SCALE, FADE_OUT)
   G %<>% fade_text(30, 22, game1, UNICORN, FADE_OUT)
-
+  set_colour(15)
   if (kp == "escape") {
     G %<>% clear_pic(G$tv_height)
     G$cursor %<>% pos_at(0, G$tv_height + 2)
-    cursor_on()
-    set_colour(15)
-    stop_quietly()
+    G$main_menu_result <- "EXIT"
+
+  } else if (kp == "enter") {
+    G$main_menu_result <- "CACTZ"
   }
 
   G
