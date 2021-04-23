@@ -1,3 +1,7 @@
+# 0.3
+
+Increase number of senses by one.
+
 # 0.2
 
 Fix problems with Unix terminals and chars leaking through

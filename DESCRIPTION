@@ -1,6 +1,6 @@
 Package: cactus.purge
 Title: R-based entertainment for weary data scientists
-Version: 0.2
+Version: 0.3
 Authors@R: 
     person(given = "Wes",
            family = "Hinsley",
@@ -13,5 +13,4 @@ LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Remotes: weshinsley/keypress@wes/cp_fixes
-Imports: R.utils, stringr, RCurl, magrittr, dplyr, crayon, utils, stats, keypress
-
+Imports: R.utils, stringr, RCurl, magrittr, dplyr, crayon, utils, stats, keypress, audio

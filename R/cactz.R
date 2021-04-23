@@ -80,6 +80,8 @@ init_screen <- function(G) {
 ###############################################################################
 
 burst_into_flames <- function(G) {
+  G$au_drop %<>% stop_sound()
+  G$au_boom %<>% play_sound()
   x <- G$cursor[1]
   y <- G$cursor[2]
   set_colour(15)
@@ -228,7 +230,10 @@ move_bomb <- function(G) {
 
   if (!is.na(G$cactus_bombed)) {
     if (G$bomby > (G$tv_height - 6) - G$cactii[G$cactus_bombed]) {
+
       # Score 2 for bombing middle of cactus, 1 for a passing blow.
+
+      G$au_splat %<>% play_sound()
       G$score <- G$score + (G$level * ifelse(G$bombx %% 6 %in% 1:3, 2, 1))
       G$cursor %<>% pos_at(1 + ((G$cactus_bombed - 1) * 6), G$bomby)
       G$cursor %<>% write("    ")
@@ -237,6 +242,7 @@ move_bomb <- function(G) {
       if ((G$blast == 0) || (G$cactii[G$cactus_bombed] == 0)) {
         G$blast <- NA
         G$cactus_bombed <- NA
+        G$au_drop %<>% stop_sound()
       }
     }
   }
@@ -261,7 +267,7 @@ move_bomb <- function(G) {
   }
 
   # Bomb is done - erase
-
+  G$au_drop %<>% stop_sound()
   G$cursor %<>% pos_at(G$bombx, G$bomby - 1)
   G$cursor %<>% write("  ")
   G$bombx <- NA
@@ -273,9 +279,10 @@ move_bomb <- function(G) {
 drop_bomb <- function(G) {
 
   # Drop bomb out of middle of plane.
-
+  G$au_drop %<>% play_sound()
   G$bombx <- G$planex + 2
   G$bomby <- G$planey + 1
+  G$pau_drop <- audio::play(G$au_drop)
 
   # Work out which cactus (if any) will get trashed
 
@@ -333,7 +340,11 @@ cactz <- function(G, level) {
                  blast = NA, cactus_bombed = NA,
                  frame = 1, end_game = NA,
                  VICTORY = 1, DEATH = 2,
-                 score = 0, level = 1))
+                 score = 0, level = 1,
+                 au_drop = load_sound("data/cactz-drop.wav"),
+                 au_splat = load_sound("data/cactz-splat.wav"),
+                 au_boom = load_sound("data/cactz-boom.wav"),
+                 au_victory = load_sound("data/cactz-victory.wav")))
 
   while (TRUE) {
     G %<>% init_screen()
@@ -347,6 +358,7 @@ cactz <- function(G, level) {
     }
 
     if (G$end_game == G$VICTORY) {
+      G$au_victory %<>% play_sound()
       G %<>% show_pic(sprintf("data/cactz-win%d.txt", 1 + (G$level %% 2)))
       G %<>% fade_text(30, 22, " %> %> %> %> %> WELL DONE! LET'S DO IT AGAIN <% <% <% <% <% ", UNICORN,
                        FADE_IN_OUT, 3)
