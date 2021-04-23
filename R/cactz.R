@@ -19,12 +19,15 @@ BOMB_TRAIL <- 178
 
 init_screen <- function(G) {
 
+
   # Initialise cactus heights
   cac_min <- min(15, round(5 + (G$level / 2)))
   cac_max <- min(17, round(10 + (G$level / 2)))
   G$frame_delay <- max(0, 0.05 - (G$level * 0.003))
 
   G$cactii <- round((stats::runif(10) * (cac_max - cac_min)) + cac_min)
+  G$cac_count <- sum(G$cactii)
+
 
   # Draw cactii, top to bottom
 
@@ -164,6 +167,15 @@ move_plane <- function(G) {
     G$score <- G$score + G$level
   }
 
+  # If no more cactus, speed up landing...
+
+  if ((G$cac_count == 0) && (G$planey < (G$tv_height - 7)) &&
+      (G$planex %in% c(20,30,40))) {
+    G$cursor %<>% pos_at(max(G$planex, 0), G$planey)
+    G$cursor %<>% write("     ")
+    G$planey <- G$planey + 1
+  }
+
   # Plane partially off left of screen
 
   if (G$planex < 0) {
@@ -222,9 +234,11 @@ move_bomb <- function(G) {
 
   # Check for nothing to do
 
-  if ((is.na(G$bombx)) || (G$frame == 1) || (!is.na(G$end_game))) {
+  if ((is.na(G$bombx)) || (G$frame == 1) || (!is.na(G$end_game)) ||
+      (G$planey == G$tv_height - 6)) {
     return(G)
   }
+
 
   # Check for cactus damage
 
@@ -235,6 +249,7 @@ move_bomb <- function(G) {
 
       G$au_splat %<>% play_sound()
       G$score <- G$score + (G$level * ifelse(G$bombx %% 6 %in% 1:3, 2, 1))
+      G$cac_count <- G$cac_count - 1
       G$cursor %<>% pos_at(1 + ((G$cactus_bombed - 1) * 6), G$bomby)
       G$cursor %<>% write("    ")
       G$blast <- G$blast - 1
@@ -277,12 +292,14 @@ move_bomb <- function(G) {
 ###############################################################################
 
 drop_bomb <- function(G) {
+  if (G$cac_count == 0) {
+    return(G)
+  }
 
   # Drop bomb out of middle of plane.
   G$au_drop %<>% play_sound()
   G$bombx <- G$planex + 2
   G$bomby <- G$planey + 1
-  G$pau_drop <- audio::play(G$au_drop)
 
   # Work out which cactus (if any) will get trashed
 
