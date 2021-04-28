@@ -37,4 +37,8 @@ insert_score <- function(f, name, score) {
   invisible()
 }
 
+pkg_file <- function(f) {
+  system.file(f, package = "cactus.purge")
+}
+
 ################################################################################

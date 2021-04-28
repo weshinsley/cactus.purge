@@ -12,9 +12,6 @@ init_screen <- function(G) {
   SOIL_2 <- 178
   SOIL_3 <- 94
   SOIL_4 <- 130
-  PLANE_COL <- 159
-  BOMB_WARHEAD <- 196
-  BOMB_TRAIL <- 178
 
   # Initialise cactus heights
   cac_min <- min(15, round(5 + (G$level / 2)))
@@ -152,6 +149,8 @@ burst_into_flames <- function(G) {
 
 move_plane <- function(G) {
 
+  PLANE_COL <- 159
+
   # Animate propeller
 
   G$frame <- (1 - G$frame)
@@ -227,6 +226,8 @@ move_plane <- function(G) {
 ###############################################################################
 
 move_bomb <- function(G) {
+  BOMB_WARHEAD <- 196
+  BOMB_TRAIL <- 178
 
   # Check for nothing to do
 
@@ -354,10 +355,10 @@ cactz <- function(G, level) {
                  frame = 1, end_game = NA,
                  VICTORY = 1, DEATH = 2,
                  score = 0, level = 1,
-                 au_drop = load_sound("data/cactz-drop.wav"),
-                 au_splat = load_sound("data/cactz-splat.wav"),
-                 au_boom = load_sound("data/cactz-boom.wav"),
-                 au_victory = load_sound("data/cactz-victory.wav")))
+                 au_drop = load_sound(pkg_file("audio/cactz-drop.wav")),
+                 au_splat = load_sound(pkg_file("audio/cactz-splat.wav")),
+                 au_boom = load_sound(pkg_file("audio/cactz-boom.wav")),
+                 au_victory = load_sound(pkg_file("audio/cactz-victory.wav"))))
 
   while (TRUE) {
     G %<>% init_screen()
@@ -372,8 +373,8 @@ cactz <- function(G, level) {
 
     if (G$end_game == G$VICTORY) {
       G$au_victory %<>% play_sound()
-      G %<>% show_pic(sprintf("data/cactz-win%d.txt", 1 + (G$level %% 2)))
-      G %<>% fade_text(30, 22, " %> %> %> %> %> WELL DONE! LET'S DO IT AGAIN <% <% <% <% <% ", UNICORN,
+      G %<>% show_pic(sprintf(pkg_file("gfx/cactz-win%d.txt"), 1 + (G$level %% 2)))
+      G %<>% fade_text(30, 22, " %<>% %<>% %<>% WELL DONE! LET'S DO IT AGAIN %<>% %<>% %<>% ", UNICORN,
                        FADE_IN_OUT, 3)
       G %<>% clear_pic(23)
       G$level <- min(99, G$level + 1)
@@ -383,7 +384,7 @@ cactz <- function(G, level) {
 
     } else {
       Sys.sleep(0.5)
-      G %<>% show_pic("data/cactz-go.txt")
+      G %<>% show_pic(pkg_file("data/cactz-go.txt"))
       Sys.sleep(2)
       if (good_score("data/cactz-hs.csv.xz", G$score)) {
         G %<>% fade_text(30, 16, "GREAT SCORE! TYPE YOUR NAME", UNICORN,

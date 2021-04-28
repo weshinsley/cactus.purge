@@ -4,7 +4,7 @@ library(crayon)
 
 main_title <- function(G) {
   G %<>% draw_divider(19)
-  G %<>% show_pic("data/title.txt")
+  G %<>% show_pic(pkg_file("gfx/title.txt"))
   name <- "CACTUS PURGE"
   instr1 <- paste0("Only one chapter so far. ENTER to play, or ESCAPE to exit")
   game1 <- "CHAPTER 1... CACTZ!"
@@ -37,7 +37,7 @@ main_title <- function(G) {
 ################################################################################
 
 cactz_title <- function(G) {
-  G %<>% show_pic("data/cactz.txt")
+  G %<>% show_pic(pkg_file("gfx/cactz.txt"))
   G %<>% draw_divider(19)
   instr1 <- paste0(get_colour(46), "P", get_colour(15), ": PLAY   ",
                    get_colour(159), "I", get_colour(15), ": INSTRUCTIONS   ",
@@ -52,10 +52,10 @@ cactz_title <- function(G) {
     kp <- tolower(keypress::keypress(block = TRUE))
     if (kp == "i") {
       if (page == "I") {
-        G %<>% show_pic("data/cactz.txt")
+        G %<>% show_pic(pkg_file("gfx/cactz.txt"))
         page <- "T"
       } else {
-        G %<>% show_pic("data/cactz-inst.txt")
+        G %<>% show_pic(pkg_file("gfx/cactz-inst.txt"))
         page <- "I"
       }
 
@@ -64,7 +64,7 @@ cactz_title <- function(G) {
       G %<>% clear_pic(23)
       if (kp == 'p') {
          G %<>% cactz()
-         G %<>% show_pic("data/cactz.txt")
+         G %<>% show_pic(pkg_file("gfx/cactz.txt"))
          G %<>% draw_divider(19)
          page <- "T"
          G$cursor %<>% write_at(3, 22, instr1)
