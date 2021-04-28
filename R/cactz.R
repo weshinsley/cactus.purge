@@ -373,7 +373,7 @@ cactz <- function(G, level) {
 
     if (G$end_game == G$VICTORY) {
       G$au_victory %<>% play_sound()
-      G %<>% show_pic(sprintf(pkg_file("gfx/cactz-win%d.txt"), 1 + (G$level %% 2)))
+      G %<>% show_pic(pkg_file(sprintf("gfx/cactz-win%d.txt", 1 + (G$level %% 2))))
       G %<>% fade_text(30, 22, " %<>% %<>% %<>% WELL DONE! LET'S DO IT AGAIN %<>% %<>% %<>% ", UNICORN,
                        FADE_IN_OUT, 3)
       G %<>% clear_pic(23)
