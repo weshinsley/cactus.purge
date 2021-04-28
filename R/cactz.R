@@ -1,24 +1,20 @@
 #' @importFrom magrittr %<>%
 
 ###############################################################################
-# Some colours...
-
-CACTUS_SKIN <- 64
-CACTUS_FLESH <- 82
-RUNWAY_1 <- 248
-RUNWAY_2 <- 252
-SOIL_1 <- 137
-SOIL_2 <- 178
-SOIL_3 <- 94
-SOIL_4 <- 130
-PLANE_COL <- 159
-BOMB_WARHEAD <- 196
-BOMB_TRAIL <- 178
-
-###############################################################################
 
 init_screen <- function(G) {
 
+  CACTUS_SKIN <- 64
+  CACTUS_FLESH <- 82
+  RUNWAY_1 <- 248
+  RUNWAY_2 <- 252
+  SOIL_1 <- 137
+  SOIL_2 <- 178
+  SOIL_3 <- 94
+  SOIL_4 <- 130
+  PLANE_COL <- 159
+  BOMB_WARHEAD <- 196
+  BOMB_TRAIL <- 178
 
   # Initialise cactus heights
   cac_min <- min(15, round(5 + (G$level / 2)))

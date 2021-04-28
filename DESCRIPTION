@@ -9,7 +9,7 @@ Authors@R:
 Description: That would be telling. Run it and find out.
 License: MIT + file LICENSE
 Encoding: UTF-8
-LazyData: true
+LazyData: false
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Remotes: weshinsley/keypress@wes/cp_fixes

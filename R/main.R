@@ -2,11 +2,6 @@
 # The main program
 
 library(magrittr)
-source("R/gfx.R")
-source("R/cactz.R")
-source("R/titles.R")
-source("R/utils.R")
-source("R/sounds.R")
 
 close <- function() {
   set_colour(15)
