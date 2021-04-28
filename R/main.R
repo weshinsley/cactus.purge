@@ -3,11 +3,25 @@
 
 library(magrittr)
 
+#' End the therapeutic entertainment
+#'
+#' Gets called on exit, and hopefully will restore the terminal to the state
+#' it was in before the therapeutic entertainment commenced.
+#'
+
 close <- function() {
   set_colour(15)
   cursor_on()
   keypress::restore_term_status()
 }
+
+#' Begin the therapeutic entertainment
+#'
+#' This needs to be called from a script in a terminal or command prompt,
+#' not in RStudio or Rgui. See the `run` script in the root of the repo.
+#'
+#' @export
+#'
 
 launch <- function() {
   check_windows_ansi()
