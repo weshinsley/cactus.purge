@@ -2,6 +2,10 @@
 # Make hi-score file utterly impenetrable, because we don't want CHEATING,
 # (unless you have the source code of course)
 
+data_frame <- function(...) {
+  data.frame(stringsAsFactors = FALSE, ...)
+}
+
 load_hiscores <- function(f) {
   hs <- utils::read.csv(f, stringsAsFactors = FALSE)
   hs$name <- unlist(lapply(hs$name, RCurl::base64Decode))
@@ -30,8 +34,7 @@ good_score <- function(f, score) {
 
 insert_score <- function(f, name, score) {
   hs <- rbind(load_hiscores(f),
-              data.frame(stringsAsFactors = FALSE,
-                         name = name, score = score))
+              data_frame(name = name, score = score))
   hs <- hs[order(as.numeric(hs$score), decreasing = TRUE), ]
   save_hiscores(hs[1:8, ], f)
   invisible()
@@ -39,6 +42,12 @@ insert_score <- function(f, name, score) {
 
 pkg_file <- function(f) {
   system.file(f, package = "cactus.purge")
+}
+
+user_file <- function(f) {
+  dir.create(tools::R_user_dir("cactus.purge"), showWarnings = FALSE,
+             recursive = TRUE)
+  file.path(tools::R_user_dir("cactus.purge"), f)
 }
 
 ################################################################################

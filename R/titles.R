@@ -37,6 +37,8 @@ main_title <- function(G) {
 ################################################################################
 
 cactz_title <- function(G) {
+  file.copy(pkg_file("other/cactz-hs.csv.xz"), user_file("cactz-hs.csv.xz"),
+            overwrite = FALSE)
   G %<>% show_pic(pkg_file("gfx/cactz.txt"))
   G %<>% draw_divider(19)
   instr1 <- paste0(get_colour(46), "P", get_colour(15), ": PLAY   ",
@@ -77,12 +79,12 @@ cactz_title <- function(G) {
       if (page != "H") {
         G %<>% clear_pic(19)
         G %<>% fade_text(30, 1, "CACTZ HALL OF FAME", UNICORN, FADE_IN)
-        G %<>% snazzy_scores("data/cactz-hs.csv.xz", FADE_IN)
+        G %<>% snazzy_scores(user_file("cactz-hs.csv.xz"), FADE_IN)
         page <- "H"
       } else {
-        G %<>% snazzy_scores("data/cactz-hs.csv.xz", FADE_OUT)
+        G %<>% snazzy_scores(user_file("cactz-hs.csv.xz"), FADE_OUT)
         G %<>% fade_text(30, 1, "CACTZ HALL OF FAME", UNICORN, FADE_OUT)
-        G %<>% show_pic("data/cactz.txt")
+        G %<>% show_pic(pkg_file("gfx/cactz.txt"))
         page <- "T"
       }
     }

@@ -1,3 +1,7 @@
+# 0.4
+
+Move data files into inst/ for package installation
+
 # 0.3
 
 Increase number of senses by one.

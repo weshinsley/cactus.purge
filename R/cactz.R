@@ -384,14 +384,14 @@ cactz <- function(G, level) {
 
     } else {
       Sys.sleep(0.5)
-      G %<>% show_pic(pkg_file("data/cactz-go.txt"))
+      G %<>% show_pic(pkg_file("gfx/cactz-go.txt"))
       Sys.sleep(2)
-      if (good_score("data/cactz-hs.csv.xz", G$score)) {
+      if (good_score(user_file("cactz-hs.csv.xz"), G$score)) {
         G %<>% fade_text(30, 16, "GREAT SCORE! TYPE YOUR NAME", UNICORN,
                          FADE_IN, triple = TRUE)
         G %<>% fade_text(25, 19, "..........", GREY_SCALE, FADE_IN, align = LEFT)
         G %<>% get_input(25, 19, 10)
-        insert_score("data/cactz-hs.csv.xz", G$text_input, G$score)
+        insert_score(user_file("cactz-hs.csv.xz"), G$text_input, G$score)
       }
       G %<>% clear_pic(23)
       break
