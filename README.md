@@ -9,10 +9,11 @@ outlet, and no other suitable R package was found.
 
 ## Execution
 
-* devtools::install_github("weshinsley/cactus.purge@cactz")
+* Install the package with devtools::install_github("weshinsley/cactus.purge")
 * Open a terminal or a Windows Command Prompt, of size 80 x 30 characters or more.
-* For Linux `./run`
-* For Windows, you'll need Rscript in your path, and then `Rscript run` to begin.
+On Mac/Linux I believe you just drag the size out. On Windows, right click on the
+top of the Command Prompt, Proprties, Layout tab, and set Windows Size there.
+* From your terminal/command prompt: `Rscript -e "cactus.purge::launch"`
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
