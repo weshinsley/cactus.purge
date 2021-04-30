@@ -1,0 +1,27 @@
+Package: cactus.purge
+Title: R-based therapeutic entertainment for weary data scientists
+Version: 0.4
+Authors@R: 
+    person(given = "Wes",
+           family = "Hinsley",
+           role = c("aut", "cre"),
+           email = "wes.hinsley@gmail.com")
+Description: That would be telling. Run it and find out.
+Depends: R (>= 4.0.0)
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: false
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Remotes: weshinsley/keypress@wes/cp_fixes
+Imports: 
+  R.utils, 
+  stringr, 
+  RCurl, 
+  magrittr, 
+  dplyr, 
+  crayon, 
+  utils, 
+  stats, 
+  keypress, 
+  audio
