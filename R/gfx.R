@@ -255,12 +255,20 @@ get_input <- function(G, x, y, max_len, col = 216, dotcol = 255) {
 }
 
 check_windows_ansi <- function() {
+  do_cmd <- function(s) {
+    suppressWarnings(res <- paste(
+      system2("cmd", s, stdout = TRUE, stderr=TRUE),
+      collapse = ""))
+    res
+  }
 
   if (.Platform$OS.type != "windows") {
-    return()
+    return(TRUE)
   }
-  s <- "cmd /c REG QUERY HKCU\\CONSOLE /v VirtualTerminalLevel"
-  suppressWarnings(res <- paste(system(s, intern = TRUE), collapse = ""))
+
+  res <- do_cmd(
+    "/c REG QUERY HKCU\\CONSOLE /v VirtualTerminalLevel")
+
   if (!grepl("REG_DWORD(\\s+)0x1", res)) {
     message("\nOn Windows, you need a registry key set to allow colours")
     message("to be used from RScript in a terminal window. The command needed:")
@@ -275,14 +283,15 @@ check_windows_ansi <- function() {
     }
     if (x == "2") {
       message("\nNo changes made.")
-      stop()
+      return(FALSE)
     }
 
-    s <- "cmd /c REG ADD HKCU\\CONSOLE /f /v VirtualTerminalLevel /t REG_DWORD /d 1"
-    suppressWarnings(res <- paste(system(s, intern = TRUE), collapse = ""))
-    message("\nDone - you'll need to start a new Command Prompt window before")
-    message("the changes take effect.\n")
-    stop()
+    res <- do_cmd(
+      "/c REG ADD HKCU\\CONSOLE /f /v VirtualTerminalLevel /t REG_DWORD /d 1")
+    message("\nDone - you'll need to start a new Command Prompt window for")
+    message("the changes to take effect.\n")
+    return(FALSE)
   }
+  return(TRUE)
 }
 
