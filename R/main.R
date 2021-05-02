@@ -24,7 +24,9 @@ close <- function() {
 #'
 
 launch <- function() {
-  check_windows_ansi()
+  if (!check_windows_ansi()) {
+    quit(save = "no", status = 0)
+  }
   keypress::save_term_status()
   keypress::set_term_echo(FALSE)
 
