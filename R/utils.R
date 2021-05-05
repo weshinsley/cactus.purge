@@ -50,4 +50,25 @@ user_file <- function(f) {
   file.path(tools::R_user_dir("cactus.purge"), f)
 }
 
+load_config <- function() {
+  f <- user_file("config.csv")
+  if (!file.exists(f)) {
+    audio_drivers = nrow(audio::audio.drivers())
+    df <- data.frame(stringsAsFactors = FALSE,
+                     name = "audio",
+                     value = audio_drivers > 0)
+    write.csv(df, f, row.names = FALSE)
+  } else {
+    df <- read.csv(f, stringsAsFactors = FALSE)
+  }
+  split(df$value, df$name)
+}
+
+save_config <- function(cfg) {
+  df <- data.frame(stringsAsFactors = FALSE,
+                   name = names(cfg),
+                   value = unlist(unname(cfg)))
+  write.csv(df, user_file("config.csv"), row.names = FALSE)
+}
+
 ################################################################################

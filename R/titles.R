@@ -3,20 +3,39 @@ library(crayon)
 ################################################################################
 
 main_title <- function(G) {
+  G$config <- load_config()
+  G$config %<>% check_sound_driver()
   G %<>% draw_divider(19)
   G %<>% show_pic(pkg_file("gfx/title.txt"))
   name <- "CACTUS PURGE"
-  instr1 <- paste0("Only one chapter so far. ENTER to play, or ESCAPE to exit")
-  game1 <- "CHAPTER 1... CACTZ!"
 
+  instr1 <- " : Sound                : Exit               : Play"
+
+  game1 <- "CHAPTER 1... CACTZ!"
 
   G %<>% fade_text(30, 21, name, GREY_SCALE, FADE_IN_OUT, 1, triple = TRUE)
   G %<>% fade_text(30, 20, instr1, GREY_SCALE, FADE_IN)
+
+  G$cursor %<>% write_at(4, 20, "S", ifelse(G$config$audio, 46, 244))
+  #G$cursor %<>% write_at(20, 20, "P", 244)
+  #G$cursor %<>% write_at(34, 20, "N", 244)
+  G$cursor %<>% write_at(44, 20, "ENTER", 46)
+  G$cursor %<>% write_at(25, 20, "ESC", 46)
+  G$cursor %<>% write_at(13, 20, ifelse(G$config$audio, "ON ", "OFF"), 195)
+
   G %<>% fade_text(30, 22, game1, UNICORN, FADE_IN, fade_speed = 0.1)
 
   while (TRUE) {
     kp <- keypress::keypress(block = TRUE)
-    if (kp %in% c("enter", "escape")) break
+    if (tolower(kp) %in% c("enter", "escape")) {
+      break
+    }
+    if (tolower(kp) == "s") {
+      if (nrow(audio::audio.drivers()) > 0) {
+        G$config$audio <- 1 - G$config$audio
+        G$cursor %<>% write_at(13, 20, ifelse(G$config$audio, "ON ", "OFF"), 195)
+      }
+    }
   }
 
   G %<>% fade_text(30, 20, instr1, GREY_SCALE, FADE_OUT)
@@ -29,6 +48,7 @@ main_title <- function(G) {
 
   } else if (kp == "enter") {
     G$main_menu_result <- "CACTZ"
+    save_config(G$config)
   }
 
   G
