@@ -358,8 +358,7 @@ cactz <- function(G, level) {
                  au_drop = load_sound(pkg_file("audio/cactz-drop.wav"), G$config),
                  au_splat = load_sound(pkg_file("audio/cactz-splat.wav"), G$config),
                  au_boom = load_sound(pkg_file("audio/cactz-boom.wav"), G$config),
-                 au_victory = load_sound(pkg_file("audio/cactz-victory.wav"), G$config)
-  ))
+                 au_victory = load_sound(pkg_file("audio/cactz-victory.wav"), G$config)))
 
   while (TRUE) {
     G %<>% init_screen()

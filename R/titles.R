@@ -17,8 +17,6 @@ main_title <- function(G) {
   G %<>% fade_text(30, 20, instr1, GREY_SCALE, FADE_IN)
 
   G$cursor %<>% write_at(4, 20, "S", ifelse(G$config$audio, 46, 244))
-  #G$cursor %<>% write_at(20, 20, "P", 244)
-  #G$cursor %<>% write_at(34, 20, "N", 244)
   G$cursor %<>% write_at(44, 20, "ENTER", 46)
   G$cursor %<>% write_at(25, 20, "ESC", 46)
   G$cursor %<>% write_at(13, 20, ifelse(G$config$audio, "ON ", "OFF"), 195)
