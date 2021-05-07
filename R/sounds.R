@@ -70,9 +70,9 @@ check_sound_card <- function() {
   status <- "NOT OK"
   try({
     wav <- load_sound(pkg_file("audio/empty.wav"), fake_conf)
-    capture.output(p <- play_sound(wav))
-    capture.output(p <- stop_sound(p))
+    capture.output(p <- play_sound(wav), file = NULL)
+    capture.output(p <- stop_sound(p), file = NULL)
     status <- "OK"
   }, silent = TRUE)
-  return (status == "OK")
+  status == "OK"
 }
