@@ -8,6 +8,7 @@ main_title <- function(G) {
   G %<>% draw_divider(19)
   G %<>% show_pic(pkg_file("gfx/title.txt"))
   name <- "CACTUS PURGE"
+  audio_avail <- (nrow(audio::audio.drivers()) > 0)
 
   instr1 <- " : Sound                : Exit               : Play"
 
@@ -16,7 +17,7 @@ main_title <- function(G) {
   G %<>% fade_text(30, 21, name, GREY_SCALE, FADE_IN_OUT, 1, triple = TRUE)
   G %<>% fade_text(30, 20, instr1, GREY_SCALE, FADE_IN)
 
-  G$cursor %<>% write_at(4, 20, "S", ifelse(G$config$audio, 46, 244))
+  G$cursor %<>% write_at(4, 20, "S", ifelse(audio_avail, 46, 244))
   G$cursor %<>% write_at(44, 20, "ENTER", 46)
   G$cursor %<>% write_at(25, 20, "ESC", 46)
   G$cursor %<>% write_at(13, 20, ifelse(G$config$audio, "ON ", "OFF"), 195)
@@ -29,7 +30,7 @@ main_title <- function(G) {
       break
     }
     if (tolower(kp) == "s") {
-      if (nrow(audio::audio.drivers()) > 0) {
+      if (audio_avail) {
         G$config$audio <- 1 - G$config$audio
         G$cursor %<>% write_at(13, 20, ifelse(G$config$audio, "ON ", "OFF"), 195)
       }
