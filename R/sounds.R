@@ -74,6 +74,6 @@ check_sound_card <- function() {
     "try({audio::play(wav$wav); status <- 'OK'}, silent = TRUE);",
     'message(status); "', sep = " ")
 
-  system2(rscript, args, stdout = TRUE, stderr = TRUE) == "OK"
+  "OK" %in% system2(rscript, args, stdout = TRUE, stderr = TRUE)
 }
 
