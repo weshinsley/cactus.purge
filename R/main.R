@@ -41,6 +41,16 @@ launch <- function() {
 
   cursor_off()
 
+  if (nrow(audio::audio.drivers()) == 0) {
+    G %<>% show_pic(pkg_file("gfx/nosound.txt"), pattern = "down")
+    k <- keypress::keypress(block = TRUE)
+    G %<>% show_pic(pkg_file("gfx/empty.txt"), pattern = "up")
+  } else if (!check_sound_card()) {
+    G %<>% show_pic(pkg_file("gfx/nosoundcard.txt"), pattern = "down")
+    k <- keypress::keypress(block = TRUE)
+    G %<>% show_pic(pkg_file("gfx/empty.txt"), pattern = "up")
+  }
+
   while (TRUE) {
     G %<>% main_title()
     if (G$main_menu_result == "CACTZ") {

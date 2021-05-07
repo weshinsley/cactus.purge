@@ -95,9 +95,16 @@ snazzy_scores <- function(G, hs_file, mode) {
 ################################################################################
 # Show an ANSI picture with lines appearing in random order
 
-show_pic <- function(G, file) {
+show_pic <- function(G, file, pattern = "random") {
   suppressWarnings(txt <- readLines(file, encoding = "UTF-8"))
-  for (line in sample(seq_along(txt))) {
+  if (pattern == "random") {
+    row_order <- sample(seq_along(txt))
+  } else if (pattern == "down") {
+    row_order <- seq_along(txt)
+  } else if (pattern == "up") {
+    row_order <- rev(seq_along(txt))
+  }
+  for (line in row_order) {
     x <- txt[line]
     G$cursor %<>% pos_at(0, line - 1)
     G$cursor %<>% write(txt[line])

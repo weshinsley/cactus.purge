@@ -1,5 +1,5 @@
-# 1.0
+# The unfolding.
 
-The first chapter.
-
-* 1.0.1 - Tidy up messages around setting Windows registry key
+* 1.0.2 - Sound on/off option. Cope with lack of sound driver.
+* 1.0.1 - Tidy up messages around setting Windows registry key.
+* 1.0.0 - First release of first chapter.
