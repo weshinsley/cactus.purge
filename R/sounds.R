@@ -58,9 +58,6 @@ check_sound_driver <- function(config) {
   if ((nd == 0) & (config$audio != FALSE)) {
     config$audio <- FALSE
   }
-  if ((nd > 0) & (!check_sound_card())) {
-    config$audio <- FALSE
-  }
   config
 }
 
@@ -70,18 +67,12 @@ check_sound_card <- function() {
   # actual sound card is there.
 
   fake_conf <- list(audio = TRUE)
-  status <- "OK"
-  tryCatch({
+  status <- "NOT OK"
+  try({
     wav <- load_sound(pkg_file("audio/empty.wav"), fake_conf)
     p <- play_sound(wav)
     p <- stop_sound(p)
-    NA
-  }, error = function(err) {
-    status <- "NOT OK"
-    NA
-  }, warning = function(warning) {
-    status <- "NOT OK"
-    NA
-  })
+    status <- "OK"
+  }, silent = TRUE)
   return (status == "OK")
 }
