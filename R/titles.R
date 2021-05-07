@@ -12,6 +12,9 @@ main_title <- function(G) {
   if (audio_avail) {
     audio_avail <- check_sound_card()
   }
+  if (!audio_avail) {
+    G$config$audio <- FALSE
+  }
 
   instr1 <- " : Sound                : Exit               : Play"
 
