@@ -9,7 +9,6 @@
 #' @return A list of two elements, `wav` is the audioSample for playing, and
 #'         `player` is initialised as NULL, but will later keep track of the
 #'         audioInstance used to play the sample.
-#'
 
 load_sound <- function(wav, config) {
   if (config$audio) {
@@ -64,15 +63,17 @@ check_sound_driver <- function(config) {
 check_sound_card <- function() {
 
   # Try to play a sound. Not sure if there's another way to see if an
-  # actual sound card is there.
+  # actual sound card is there. Have to do this as an external, to
+  # prevent text going everywhere...
 
-  fake_conf <- list(audio = TRUE)
-  status <- "NOT OK"
-  try({
-    wav <- load_sound(pkg_file("audio/empty.wav"), fake_conf)
-    capture.output(p <- play_sound(wav), file = NULL)
-    capture.output(p <- stop_sound(p), file = NULL)
-    status <- "OK"
-  }, silent = TRUE)
-  status == "OK"
+  rscript <- as.character(Sys.which("Rscript"))
+  args <- paste('-e "',
+    "fake_conf <- list(audio = TRUE);",
+    "status <- 'NOT OK';",
+    "wav <- cactus.purge:::load_sound(cactus.purge:::pkg_file('audio/empty.wav'), fake_conf);",
+    "try({audio::play(wav$wav); status <- 'OK'}, silent = TRUE);",
+    'message(status); "', sep = " ")
+
+  system2(rscript, args, stdout = TRUE, stderr = TRUE) == "OK"
 }
+
