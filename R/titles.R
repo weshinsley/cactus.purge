@@ -9,6 +9,9 @@ main_title <- function(G) {
   G %<>% show_pic(pkg_file("gfx/title.txt"))
   name <- "CACTUS PURGE"
   audio_avail <- (nrow(audio::audio.drivers()) > 0)
+  if (audio_avail) {
+    audio_avail <- check_sound_card()
+  }
 
   instr1 <- " : Sound                : Exit               : Play"
 
