@@ -117,15 +117,18 @@ burst_into_flames <- function(G) {
     }
     G
   }
+  next_frame <- waitr::waitr_timestamp() + 50
   for (i in 1:8) {
     G %<>% draw_ring(rings_x[[i]], rings_y[[i]], flame[i])
-    Sys.sleep(0.05)
+    next_frame <- waitr::waitr_until(next_frame) + 50
   }
+
   for (i in 2:16) {
     if (i<=8)
       G %<>% draw_ring(rings_x[[i]], rings_y[[i]], flame[1])
     fprev <- i - 1
     fnext <- i + 1
+
     for (fno in 2:9) {
       if (fno <= 9) {
         if ((fprev >= 1) && (fprev <= 8))
@@ -136,10 +139,9 @@ burst_into_flames <- function(G) {
       fprev <- fprev - 1
       fnext <- fnext + 1
     }
-    Sys.sleep(0.05)
+    next_frame <- waitr::waitr_until(next_frame) + 50
   }
 
-  Sys.sleep(0.1)
   set_colour(15)
   G$cursor %<>% pos_at(0, G$tv_height + 1)
   G
@@ -346,7 +348,7 @@ check_keys <- function(G) {
 
 ###############################################################################
 
-cactz <- function(G, level) {
+cactz <- function(G) {
   remember_G <- G
 
   G <- c(G, list(planex = -4, planey = 0, land = NA,
@@ -364,9 +366,10 @@ cactz <- function(G, level) {
     G %<>% init_screen()
 
     while (is.na(G$end_game)) {
+      next_frame <- waitr::waitr_timestamp() + (1000 * G$frame_delay)
       G %<>% move_plane %<>% move_bomb %<>% check_keys %<>% update_score
       if (is.na(G$land)) {
-        if (G$frame_delay > 0) Sys.sleep(G$frame_delay)
+        waitr::waitr_until(next_frame)
       }
       G$land <- NA
     }
@@ -375,7 +378,7 @@ cactz <- function(G, level) {
       G$au_victory %<>% play_sound()
       G %<>% show_pic(pkg_file(sprintf("gfx/cactz-win%d.txt", 1 + (G$level %% 2))))
       G %<>% fade_text(30, 22, " %<>% %<>% %<>% WELL DONE! LET'S DO IT AGAIN %<>% %<>% %<>% ", UNICORN,
-                       FADE_IN_OUT, 3)
+                       FADE_IN_OUT, delay = 3000)
       G %<>% clear_pic(23)
       G$level <- min(99, G$level + 1)
       G$end_game <- NA
@@ -383,9 +386,9 @@ cactz <- function(G, level) {
       G$planey <- 0
 
     } else {
-      Sys.sleep(0.5)
+      waitr::waitr_delay(500)
       G %<>% show_pic(pkg_file("gfx/cactz-go.txt"))
-      Sys.sleep(2)
+      waitr::waitr_delay(2000)
       if (good_score(user_file("cactz-hs.csv.xz"), G$score)) {
         G %<>% fade_text(30, 16, "GREAT SCORE! TYPE YOUR NAME", UNICORN,
                          FADE_IN, triple = TRUE)

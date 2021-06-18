@@ -20,7 +20,7 @@ main_title <- function(G) {
 
   game1 <- "CHAPTER 1... CACTZ!"
 
-  G %<>% fade_text(30, 21, name, GREY_SCALE, FADE_IN_OUT, 1, triple = TRUE)
+  G %<>% fade_text(30, 21, name, GREY_SCALE, FADE_IN_OUT, delay = 1000, triple = TRUE)
   G %<>% fade_text(30, 20, instr1, GREY_SCALE, FADE_IN)
 
   G$cursor %<>% write_at(4, 20, "S", ifelse(audio_avail, 46, 244))
@@ -28,7 +28,7 @@ main_title <- function(G) {
   G$cursor %<>% write_at(25, 20, "ESC", 46)
   G$cursor %<>% write_at(13, 20, ifelse(G$config$audio, "ON ", "OFF"), 195)
 
-  G %<>% fade_text(30, 22, game1, UNICORN, FADE_IN, fade_speed = 0.1)
+  G %<>% fade_text(30, 22, game1, UNICORN, FADE_IN, fade_speed = 100)
 
   while (TRUE) {
     kp <- keypress::keypress(block = TRUE)
