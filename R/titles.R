@@ -20,7 +20,7 @@ main_title <- function(G) {
 
   game1 <- "CHAPTER 1... CACTZ!"
 
-  G %<>% fade_text(30, 21, name, GREY_SCALE, FADE_IN_OUT, 1, triple = TRUE)
+  G %<>% fade_text(30, 21, name, GREY_SCALE, FADE_IN_OUT, delay = 500, triple = TRUE)
   G %<>% fade_text(30, 20, instr1, GREY_SCALE, FADE_IN)
 
   G$cursor %<>% write_at(4, 20, "S", ifelse(audio_avail, 46, 244))

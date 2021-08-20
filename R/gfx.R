@@ -25,7 +25,7 @@ GREY_SCALE <- 232:255
 
 fade_text <- function(G, x, y, text, cols, fade_mode,
                       delay = 0, triple = FALSE, align = CENTRE,
-                      fade_speed = 0.02) {
+                      fade_speed = 20) {
 
 
   x <- max(0, min(G$tv_width, dplyr::case_when(
@@ -35,27 +35,29 @@ fade_text <- function(G, x, y, text, cols, fade_mode,
 
   col_span <- length(cols)
   if (fade_mode != FADE_OUT) {
+    next_frame <- waitr::waitr_timestamp() + fade_speed
     for (i in seq_along(cols)) {
       G$cursor %<>% write_at(x, y, text, cols[i])
       if (triple) {
         G$cursor %<>% write_at(x, y - 1, text, cols[1 + floor(i / 2)])
         G$cursor %<>% write_at(x, y + 1, text, cols[1 + floor(i / 2)])
       }
-      Sys.sleep(fade_speed)
+      next_frame <- waitr::wait_until(next_frame + fade_speed)
     }
   }
 
   if (fade_mode == FADE_IN) {
     return(G)
   }
-  Sys.sleep(delay)
+  waitr::wait_for(delay)
+  next_frame <- waitr::waitr_timestamp() + fade_speed
   for (i in rev(seq_along(cols))) {
     G$cursor %<>% write_at(x, y, text, cols[i])
     if (triple) {
       G$cursor %<>% write_at(x, y - 1, text, cols[1 + floor(i / 2)])
       G$cursor %<>% write_at(x, y + 1, text, cols[1 + floor(i / 2)])
     }
-    Sys.sleep(fade_speed)
+    next_frame <- waitr::wait_until(next_frame + fade_speed)
   }
 
   # Erase afterwards...
@@ -78,6 +80,7 @@ snazzy_scores <- function(G, hs_file, mode) {
   longest_name <- floor(max(nchar(hs$name))/2)
   range <- 1:15
   if (mode != FADE_IN) range <- 15:1
+  next_frame <- waitr::waitr_timestamp() + 100
   for (top_col in range) {
     for (col in top_col:max(1, top_col - 7)) {
       line <- (top_col + 1) - col
@@ -87,7 +90,7 @@ snazzy_scores <- function(G, hs_file, mode) {
       set_colour(UNICORN[col])
       G$cursor %<>% write_at(12 - longest_name, 1 + (2* line), s)
     }
-    Sys.sleep(0.1)
+    next_frame <- waitr::wait_until(next_frame + 100)
   }
   G
 }
@@ -104,11 +107,12 @@ show_pic <- function(G, file, pattern = "random") {
   } else if (pattern == "up") {
     row_order <- rev(seq_along(txt))
   }
+  next_frame <- waitr::waitr_timestamp() + 50
   for (line in row_order) {
     x <- txt[line]
     G$cursor %<>% pos_at(0, line - 1)
     G$cursor %<>% write(txt[line])
-    Sys.sleep(0.01)
+    next_frame <- waitr::wait_until(next_frame + 50)
   }
   G
 }
@@ -116,10 +120,11 @@ show_pic <- function(G, file, pattern = "random") {
 #' @importFrom magrittr %>%
 NULL
 clear_pic <- function(G, y) {
+  next_frame <- waitr::waitr_timestamp() + 50
   for (line in sample(y)) {
     G$cursor %<>% pos_at(0, line - 1)
     G$cursor %<>% write(paste(rep(" ", G$tv_width), collapse=""))
-    Sys.sleep(0.01)
+    next_frame <- waitr::wait_until(next_frame + 50)
   }
   G
 }
@@ -301,4 +306,3 @@ check_windows_ansi <- function() {
   }
   return(TRUE)
 }
-
