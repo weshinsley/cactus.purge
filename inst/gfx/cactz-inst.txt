@@ -1,20 +1,20 @@
                                                             
  [0mAfter a long day's work sorting out the RTM data, Katy had 
- had [31;1menough[0m. She jumped into her Cessna 172 and flew out to 
- do some on-site Yellow Fever research. Unfortunately, back 
- at the aerodrome, a batch of [32;1mpoorly formatted dates[0m caused 
- a failure in the fueling system, which was not spotted, as 
- the human validator was struck down with gout. Before long 
- the engine spluttered, and Katy had no option but to glide 
- towards an emergency landing in a field of cactii.         
+ [0mhad [31;1menough[0m. She jumped into her Cessna 172 and flew out to 
+ [0mdo some on-site Yellow Fever research. Unfortunately, back 
+ [0mat the aerodrome, a batch of [32;1mpoorly formatted dates[0m caused 
+ [0ma failure in the fueling system, which was not spotted, as 
+ [0mthe human validator was struck down with gout. Before long 
+ [0mthe engine spluttered, and Katy had no option but to glide 
+ [0mtowards an emergency landing in a field of cacti.         
                                                             
- Fortunately, due to a subtle [33;1mdivide-by-zero[0m bug lurking in 
- the cargo loading algorithm, Katy found the plane had been 
- fitted with an infinite supply of bombs. Maybe, just maybe 
- she could [34;1mpurge the cactii[0m in time for a safe landing.     
+ [0mFortunately, due to a subtle [33;1mdivide-by-zero[0m bug lurking in 
+ [0mthe cargo loading algorithm, Katy found the plane had been 
+ [0mfitted with an infinite supply of bombs. Maybe, just maybe 
+ [0mshe could [34;1mpurge the cacti[0m in time for a safe landing.     
                                                             
- Push SPACE to drop a bomb. That's it. And due to a strange 
- twist in the plot that never gets adequately explained, if 
- you do land safely, try again with taller cactii and a new 
- and speedier plane, that still has no fuel.                
+ [0mPush SPACE to drop a bomb. That's it. And due to a strange 
+ [0mtwist in the plot that never gets adequately explained, if 
+ [0myou do land safely, try again with lankier cacti and a new 
+ [0mand speedier plane, that still has no fuel.                
  
