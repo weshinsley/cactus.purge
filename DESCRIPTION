@@ -25,4 +25,5 @@ Imports:
   utils, 
   stats, 
   keypress, 
+  waitr,
   audio
