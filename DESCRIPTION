@@ -1,6 +1,6 @@
 Package: cactus.purge
 Title: R-based therapeutic entertainment for weary data scientists
-Version: 1.0.3
+Version: 1.0.4
 Authors@R: 
     person(given = "Wes",
            family = "Hinsley",
@@ -21,7 +21,6 @@ Imports:
   RCurl, 
   magrittr, 
   dplyr, 
-  crayon, 
   utils, 
   stats, 
   keypress, 
