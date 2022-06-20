@@ -62,7 +62,7 @@ fade_text <- function(G, x, y, text, cols, fade_mode,
 
   # Erase afterwards...
 
-  text <- paste(rep(" ", nchar(crayon::strip_style(text))), collapse = "")
+  text <- paste(rep(" ", raw_nchar(text)), collapse = "")
   G$cursor %<>% write_at(x, y, text)
   if (triple) {
     G$cursor %<>% write_at(x, y - 1, text)
@@ -186,7 +186,7 @@ pos_at <- function(cursor, x, y) {
 write <- function(cursor, text, colour = NA) {
   if (!is.na(colour)) set_colour(colour)
   cat(text)
-  cursor[1] <- cursor[1] + nchar(crayon::strip_style(text))
+  cursor[1] <- cursor[1] + raw_nchar(text)
   cursor
 }
 

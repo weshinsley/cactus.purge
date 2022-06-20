@@ -1,6 +1,16 @@
-################################################################################
-# Make hi-score file utterly impenetrable, because we don't want CHEATING,
-# (unless you have the source code of course)
+##########################################################################
+# ansi_regex copied from has_ansi.R in the crayon library.
+# and raw_nchars is like strip_stype, but without the
+# useBytes=TRUE, which fails on R 4.1.3 and earlier
+# when the text was read with readLines(..., encoding="UTF-8")
+
+ansi_regex <- paste0("(?:(?:\\x{001b}\\[)|\\x{009b})",
+                     "(?:(?:[0-9]{1,3})?(?:(?:;[0-9]{0,3})*)?[A-M|f-m])",
+                     "|\\x{001b}[A-M]")
+
+raw_nchar <- function(text) {
+  nchar(gsub(ansi_regex, "", text, perl = TRUE))
+}
 
 data_frame <- function(...) {
   data.frame(stringsAsFactors = FALSE, ...)
@@ -12,6 +22,10 @@ load_hiscores <- function(f) {
   hs$score <- unlist(lapply(hs$score, RCurl::base64Decode))
   hs
 }
+
+################################################################################
+# Make hi-score file utterly impenetrable, because we don't want CHEATING,
+# (unless you have the source code of course)
 
 save_hiscores <- function(hs, f) {
   hs$name <- unlist(lapply(hs$name, RCurl::base64Encode))
