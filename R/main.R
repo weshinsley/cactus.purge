@@ -59,5 +59,5 @@ launch <- function() {
     }
   }
 
-  keypress::with_no_echo(game())
+  keypress::without_echo(game())
 }
