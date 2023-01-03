@@ -1,6 +1,6 @@
 Package: cactus.purge
 Title: R-based therapeutic entertainment for weary data scientists
-Version: 1.0.4
+Version: 1.0.5
 Authors@R: 
     person(given = "Wes",
            family = "Hinsley",
