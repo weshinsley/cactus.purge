@@ -331,6 +331,11 @@ check_keys <- function(G) {
   # dropping one, and if plane is reasonable on screen
 
   kp <- keypress::keypress(block = FALSE)
+
+  if (is.na(kp)) {
+    return(G)
+  }
+
   if ((kp == " ") && (is.na(G$bombx)) &&
       (G$planex >= -2) && (G$planex <= G$tv_width - 4)) {
 
