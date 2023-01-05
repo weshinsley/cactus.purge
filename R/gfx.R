@@ -19,6 +19,14 @@ RIGHT <- 3
 UNICORN <- c(16:21, 27, 33, 39, 45, 51, 87, 123, 159, 195)
 GREY_SCALE <- 232:255
 
+raw_length <- function(text) {
+  ansi_regex <- paste0("(?:(?:\\x{001b}\\[)|\\x{009b})",
+                      "(?:(?:[0-9]{1,3})?(?:(?:;[0-9]{0,3})*)?[A-M|f-m])",
+                      "|\\x{001b}[A-M]")
+  x <- gsub(ansi_regex, "", text, perl = TRUE)
+  nchar(x)
+}
+
 ################################################################################
 # Fade in/out/both of  1 or 3 bits of left/right/centre aligned text. If triple,
 # then brightest in the middle, half brightness above and below.
@@ -62,7 +70,7 @@ fade_text <- function(G, x, y, text, cols, fade_mode,
 
   # Erase afterwards...
 
-  text <- paste(rep(" ", nchar(crayon::strip_style(text))), collapse = "")
+  text <- paste(rep(" ", raw_length(text)), collapse = "")
   G$cursor %<>% write_at(x, y, text)
   if (triple) {
     G$cursor %<>% write_at(x, y - 1, text)
@@ -119,14 +127,14 @@ show_pic <- function(G, file, pattern = "random") {
 
 #' @importFrom magrittr %>%
 NULL
-clear_pic <- function(G, y) {
+clear_pic <- function(curs, y, tv_width = 60) {
   next_frame <- waitr::waitr_timestamp() + 50
   for (line in sample(y)) {
-    G$cursor %<>% pos_at(0, line - 1)
-    G$cursor %<>% write(paste(rep(" ", G$tv_width), collapse=""))
+    curs %<>% pos_at(0, line - 1)
+    curs %<>% write(paste(rep(" ", tv_width), collapse = ""))
     next_frame <- waitr::wait_until(next_frame + 50)
   }
-  G
+  curs
 }
 
 ################################################################################
@@ -186,7 +194,7 @@ pos_at <- function(cursor, x, y) {
 write <- function(cursor, text, colour = NA) {
   if (!is.na(colour)) set_colour(colour)
   cat(text)
-  cursor[1] <- cursor[1] + nchar(crayon::strip_style(text))
+  cursor[1] <- cursor[1] + raw_length(text)
   cursor
 }
 
