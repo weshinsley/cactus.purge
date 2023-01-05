@@ -6,12 +6,12 @@
  [0ma failure in the fueling system, which was not spotted, as 
  [0mthe human validator was struck down with gout. Before long 
  [0mthe engine spluttered, and Katy had no option but to glide 
- [0mtowards an emergency landing in a field of cacti.         
+ [0mtowards an emergency landing in a field of cacti.          
                                                             
  [0mFortunately, due to a subtle [33;1mdivide-by-zero[0m bug lurking in 
  [0mthe cargo loading algorithm, Katy found the plane had been 
  [0mfitted with an infinite supply of bombs. Maybe, just maybe 
- [0mshe could [34;1mpurge the cacti[0m in time for a safe landing.     
+ [0mshe could [34;1mpurge the cacti[0m in time for a safe landing.      
                                                             
  [0mPush SPACE to drop a bomb. That's it. And due to a strange 
  [0mtwist in the plot that never gets adequately explained, if 
