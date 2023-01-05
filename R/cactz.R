@@ -2,8 +2,7 @@
 
 ###############################################################################
 
-init_screen <- function(G) {
-
+cactz_init_screen <- function(G) {
   CACTUS_SKIN <- 64
   CACTUS_FLESH <- 82
   RUNWAY_1 <- 248
@@ -75,13 +74,19 @@ init_screen <- function(G) {
 
 ###############################################################################
 
-burst_into_flames <- function(G) {
-  G$au_drop %<>% stop_sound()
-  G$au_boom %<>% play_sound()
-  x <- G$cursor[1]
-  y <- G$cursor[2]
+burst_into_flames <- function(G, audio = TRUE, x = NA, y = NA,
+                              flame = NA) {
+  if (audio) {
+    G$au_drop %<>% stop_sound()
+    G$au_boom %<>% play_sound()
+  }
+  x <- ifelse(is.na(x), G$cursor[1], x)
+  y <- ifelse(is.na(y), G$cursor[2], y)
   set_colour(15)
-  flame <- c(226,220,214,208,202,196,160,124, 0)
+
+  if (any(is.na(flame))) {
+    flame <- c(226,220,214,208,202,196,160,124,0)
+  }
 
   rings_x <- list(0,
                 c(-1, 1, 0, 0),
@@ -117,6 +122,7 @@ burst_into_flames <- function(G) {
     }
     G
   }
+
   next_frame <- waitr::waitr_timestamp() + 50
   for (i in 1:8) {
     G %<>% draw_ring(rings_x[[i]], rings_y[[i]], flame[i])
@@ -149,7 +155,7 @@ burst_into_flames <- function(G) {
 
 ###############################################################################
 
-move_plane <- function(G) {
+cactz_move_plane <- function(G) {
 
   PLANE_COL <- 159
 
@@ -227,7 +233,7 @@ move_plane <- function(G) {
 
 ###############################################################################
 
-move_bomb <- function(G) {
+cactz_move_bomb <- function(G) {
   BOMB_WARHEAD <- 196
   BOMB_TRAIL <- 178
 
@@ -290,7 +296,7 @@ move_bomb <- function(G) {
 
 ###############################################################################
 
-drop_bomb <- function(G) {
+cactz_drop_bomb <- function(G) {
   if (G$cac_count == 0) {
     return(G)
   }
@@ -316,7 +322,7 @@ drop_bomb <- function(G) {
 
 ###############################################################################
 
-update_score <- function(G) {
+cactz_update_score <- function(G) {
   G$score <- min(G$score, 99999999)
   score <- formatC(G$score, width = 8, format = "d", flag = "0")
   G$cursor %<>% write_at(8, 22, score, 226)
@@ -325,16 +331,21 @@ update_score <- function(G) {
 
 ###############################################################################
 
-check_keys <- function(G) {
+cactz_check_keys <- function(G) {
 
   # Check for dropping a bomb, if we're not already
   # dropping one, and if plane is reasonable on screen
 
   kp <- keypress::keypress(block = FALSE)
+
+  if (is.na(kp)) {
+    return(G)
+  }
+
   if ((kp == " ") && (is.na(G$bombx)) &&
       (G$planex >= -2) && (G$planex <= G$tv_width - 4)) {
 
-    G %<>% drop_bomb
+    G %<>% cactz_drop_bomb
   }
 
   # Check for landing...
@@ -363,11 +374,15 @@ cactz <- function(G) {
                  au_victory = load_sound(pkg_file("audio/cactz-victory.wav"), G$config)))
 
   while (TRUE) {
-    G %<>% init_screen()
+    G %<>% cactz_init_screen()
 
     while (is.na(G$end_game)) {
       next_frame <- waitr::waitr_timestamp() + (1000 * G$frame_delay)
-      G %<>% move_plane %<>% move_bomb %<>% check_keys %<>% update_score
+      G %<>% cactz_move_plane %<>%
+             cactz_move_bomb %<>%
+             cactz_check_keys %<>%
+             cactz_update_score
+
       if (is.na(G$land)) {
         waitr::wait_until(next_frame)
       }
@@ -379,7 +394,7 @@ cactz <- function(G) {
       G %<>% show_pic(pkg_file(sprintf("gfx/cactz-win%d.txt", 1 + (G$level %% 2))))
       G %<>% fade_text(30, 22, " %<>% %<>% %<>% WELL DONE! LET'S DO IT AGAIN %<>% %<>% %<>% ", UNICORN,
                        FADE_IN_OUT, delay = 3000)
-      G %<>% clear_pic(23)
+      G$cursor %<>% clear_pic(23)
       G$level <- min(99, G$level + 1)
       G$end_game <- NA
       G$planex <- -4
@@ -396,7 +411,7 @@ cactz <- function(G) {
         G %<>% get_input(25, 19, 10)
         insert_score(user_file("cactz-hs.csv.xz"), G$text_input, G$score)
       }
-      G %<>% clear_pic(23)
+      G$cursor %<>% clear_pic(23)
       break
     }
   }
