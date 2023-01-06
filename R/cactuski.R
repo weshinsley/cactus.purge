@@ -1297,25 +1297,22 @@ cactuski_end <- function(G) {
     waitr::wait_until(time + 100)
   }
   dotsx <- c(3, 2, 1, 0, 1, 2, 3, NA, NA, NA, NA,
-             6, 6, 6, 6, 6, NA, NA,
-             8, 8, 8, 8, 8, NA, NA,
-             5, 6, 7, 8, 9, NA, NA,
-             5, 6, 7 ,8, 9, NA, NA, NA, NA,
+             5, 6, 5, 6, NA, NA,
+             9, 8, 7, 6, 5, NA, NA,
+             8, 9, 8, 9, NA, NA,
              11, 12, 13, 14, 13, 12, 11)
 
   dotsy <- c(0, 1, 2, 3, 4, 5, 6, NA, NA, NA, NA,
-             1, 2, 3, 4, 5, NA, NA,
+             1, 1, 2, 2, NA, NA,
              1, 2, 3 ,4 ,5, NA, NA,
-             2, 2, 2, 2, 2, NA, NA,
-             4, 4, 4, 4, 4, NA, NA, NA, NA,
+             4, 4, 5, 5, NA, NA,
              0, 1, 2, 3, 4, 5, 6)
 
   dotsx <- dotsx + 22
   dotsy <- dotsy + 5
   waitr::wait_for(2000)
   for (i in seq_len(length(dotsx))) {
-    col <- sample(c(get_colour(10), get_colour(46), get_colour(154),
-                    get_colour(118)), 1)
+    col <- sample(c(get_colour(46), get_colour(154), get_colour(118)), 1)
     if (!is.na(dotsx[i])) G$cursor %<>% write_at(dotsx[i], dotsy[i], paste0(col, "#"))
     waitr::wait_for(30)
   }
@@ -1508,6 +1505,10 @@ cactuski <- function(G = NA) {
   }
 
   # Game is now over
+
+  # Clear keyboard buffer
+
+  while (!is.na(keypress::keypress(block = FALSE))) {}
 
   G$score <- formatC(G$score/100, format = "f", digits = 2, flag = "0")
   if (good_score(user_file("cactuski-hs.csv.xz"), G$score)) {
