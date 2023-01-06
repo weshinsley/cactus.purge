@@ -694,7 +694,7 @@ cactuski_wiggle_track <- function(T) {
 # (Re)-start - initialise all the clutter
 
 cactuski_restart <- function(G, T) {
-  kp <- keypress::keypress(block = FALSE)
+  while (!is.na(keypress::keypress(block = FALSE))) {}
   G$cursor %<>% cactuski_setup(T$wid_zero)
   G$ky <- 0L
   yindex <- ifelse(T$top == 1, 19, T$top - 1)
