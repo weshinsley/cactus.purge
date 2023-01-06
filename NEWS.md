@@ -6,6 +6,7 @@
 
 # The first chapter
 
+* 1.0.5 - with_no_echo -> without_echo for latest keypress
 * 1.0.4 - Remove crayon dependency to fix v1.5.1 gfx issue.
 * 1.0.3 - Fix typo and improve frame-rate consistency.
 * 1.0.2 - Sound on/off option. Cope with lack of sound driver.
