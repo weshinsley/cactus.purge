@@ -53,11 +53,13 @@ launch <- function() {
       G %<>% main_title()
       if (G$main_menu_result == "CACTZ") {
         G %<>% cactz_title()
+      } else if (G$main_menu_result == "CACTUSKI") {
+        G %<>% cactuski_title()
       } else {
         break
       }
     }
   }
 
-  keypress::with_no_echo(game())
+  keypress::without_echo(game())
 }
