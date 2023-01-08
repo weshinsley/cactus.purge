@@ -1,5 +1,3 @@
-#' @importFrom magrittr %<>%
-
 ################################################################################
 # GFX - support for "graphics", by which I mean cursor and colour control,     #
 # and some exhilarating special text effects.                                  #
@@ -31,12 +29,12 @@ raw_length <- function(text) {
 # Fade in/out/both of  1 or 3 bits of left/right/centre aligned text. If triple,
 # then brightest in the middle, half brightness above and below.
 
-fade_text <- function(G, x, y, text, cols, fade_mode,
+fade_text <- function(cursor, x, y, text, cols, fade_mode,
                       delay = 0, triple = FALSE, align = CENTRE,
-                      fade_speed = 20) {
+                      fade_speed = 20, tv_width = 60) {
 
 
-  x <- max(0, min(G$tv_width, dplyr::case_when(
+  x <- max(0, min(tv_width, dplyr::case_when(
     align == CENTRE ~ x - round(nchar(text) / 2),
     align == RIGHT ~ x - nchar(text),
     TRUE ~ x)))
@@ -45,25 +43,25 @@ fade_text <- function(G, x, y, text, cols, fade_mode,
   if (fade_mode != FADE_OUT) {
     next_frame <- waitr::waitr_timestamp() + fade_speed
     for (i in seq_along(cols)) {
-      G$cursor %<>% write_at(x, y, text, cols[i])
+      cursor <- write_at(cursor, x, y, text, cols[i])
       if (triple) {
-        G$cursor %<>% write_at(x, y - 1, text, cols[1 + floor(i / 2)])
-        G$cursor %<>% write_at(x, y + 1, text, cols[1 + floor(i / 2)])
+        cursor <- write_at(cursor, x, y - 1, text, cols[1 + floor(i / 2)])
+        cursor <- write_at(cursor, x, y + 1, text, cols[1 + floor(i / 2)])
       }
       next_frame <- waitr::wait_until(next_frame + fade_speed)
     }
   }
 
   if (fade_mode == FADE_IN) {
-    return(G)
+    return(cursor)
   }
   waitr::wait_for(delay)
   next_frame <- waitr::waitr_timestamp() + fade_speed
   for (i in rev(seq_along(cols))) {
-    G$cursor %<>% write_at(x, y, text, cols[i])
+    cursor <- write_at(cursor, x, y, text, cols[i])
     if (triple) {
-      G$cursor %<>% write_at(x, y - 1, text, cols[1 + floor(i / 2)])
-      G$cursor %<>% write_at(x, y + 1, text, cols[1 + floor(i / 2)])
+      cursor <- write_at(cursor, x, y - 1, text, cols[1 + floor(i / 2)])
+      cursor <- write_at(cursor, x, y + 1, text, cols[1 + floor(i / 2)])
     }
     next_frame <- waitr::wait_until(next_frame + fade_speed)
   }
@@ -71,19 +69,19 @@ fade_text <- function(G, x, y, text, cols, fade_mode,
   # Erase afterwards...
 
   text <- paste(rep(" ", raw_length(text)), collapse = "")
-  G$cursor %<>% write_at(x, y, text)
+  cursor <- write_at(cursor, x, y, text)
   if (triple) {
-    G$cursor %<>% write_at(x, y - 1, text)
-    G$cursor %<>% write_at(x, y + 1, text)
+    cursor <- write_at(cursor, x, y - 1, text)
+    cursor <- write_at(cursor, x, y + 1, text)
   }
-  G
+  cursor
 }
 
 ################################################################################
 # Do a snazzy cascading unicorn fade in/out on 8 hi-scores...
 # Assumes a black screen
 
-snazzy_scores <- function(G, hs_file, mode) {
+snazzy_scores <- function(cursor, hs_file, mode) {
   hs <- load_hiscores(hs_file)
   longest_name <- floor(max(nchar(hs$name))/2)
   range <- 1:15
@@ -96,17 +94,17 @@ snazzy_scores <- function(G, hs_file, mode) {
       sc <- gsub("  ", ". ", sc)
       s <- paste0(stringr::str_pad(hs$name[line], 10), " . . . . . . . . ", sc)
       set_colour(UNICORN[col])
-      G$cursor %<>% write_at(12 - longest_name, 1 + (2* line), s)
+      cursor <- write_at(cursor, 12 - longest_name, 1 + (2* line), s)
     }
     next_frame <- waitr::wait_until(next_frame + 100)
   }
-  G
+  cursor
 }
 
 ################################################################################
 # Show an ANSI picture with lines appearing in random order
 
-show_pic <- function(G, file, pattern = "random") {
+show_pic <- function(cursor, file, pattern = "random") {
   suppressWarnings(txt <- readLines(file, encoding = "UTF-8"))
   if (pattern == "random") {
     row_order <- sample(seq_along(txt))
@@ -118,20 +116,18 @@ show_pic <- function(G, file, pattern = "random") {
   next_frame <- waitr::waitr_timestamp() + 50
   for (line in row_order) {
     x <- txt[line]
-    G$cursor %<>% pos_at(0, line - 1)
-    G$cursor %<>% write(txt[line])
+    cursor <- pos_at(cursor, 0, line - 1)
+    cursor <- write(cursor, txt[line])
     next_frame <- waitr::wait_until(next_frame + 50)
   }
-  G
+  cursor
 }
 
-#' @importFrom magrittr %>%
-NULL
 clear_pic <- function(curs, y, tv_width = 60) {
   next_frame <- waitr::waitr_timestamp() + 50
   for (line in sample(y)) {
-    curs %<>% pos_at(0, line - 1)
-    curs %<>% write(paste(rep(" ", tv_width), collapse = ""))
+    curs <- pos_at(curs, 0, line - 1)
+    curs <- write(curs, paste(rep(" ", tv_width), collapse = ""))
     next_frame <- waitr::wait_until(next_frame + 50)
   }
   curs
@@ -199,8 +195,8 @@ write <- function(cursor, text, colour = NA) {
 }
 
 write_at <- function(cursor, x, y, text, colour = NA, align = LEFT) {
-  cursor %<>% pos_at(x, y)
-  cursor %<>% write(text, colour)
+  cursor <- pos_at(cursor, x, y)
+  cursor <- write(cursor, text, colour)
   cursor
 }
 
@@ -208,9 +204,9 @@ write_at <- function(cursor, x, y, text, colour = NA, align = LEFT) {
 ################################################################################
 # Turn on the CRT.
 
-draw_tv_screen <- function(wid = 60, hei = 20) {
+draw_tv_screen <- function(wid = 60, hei = 20, col = 244) {
   # TV screens are grey.
-  set_colour(244)
+  set_colour(col)
 
   # Draw top, sides and bottom
   cat(paste(c("  ", rep("#", wid + 2)), collapse = ""), "\n")
@@ -222,24 +218,22 @@ draw_tv_screen <- function(wid = 60, hei = 20) {
   # Set ANSI cursor on screen to match returned co-ordinate.
 
   cat(paste(rep(" ", SCREEN_MARGIN_X), collapse = ""))
-  c(0, hei+1)
+  c(0, hei + 1)
 }
 
-draw_divider <- function(G, y) {
-  G$cursor %<>% pos_at(0, y)
-  set_colour(248)
-  G$cursor %<>% write(paste(rep("-", 60), collapse = ""))
-  G
+draw_divider <- function(cursor, y, TV_WIDTH = 60, col = 248) {
+  set_colour(col)
+  write_at(cursor, 0, y, paste(rep("-", TV_WIDTH), collapse = ""))
 }
 
 ################################################################################
 # Get a limited amount of keyboard input. (readLines won't work as it will mess
 # up our co-ordinates... Colour 216 is apparently light salmon.
 
-get_input <- function(G, x, y, max_len, col = 216, dotcol = 255) {
+get_input <- function(cursor, x, y, max_len, col = 216, dotcol = 255) {
   cur_pos <- 1
   set_colour(col)
-  G$cursor %<>% write_at(x, y, "?")
+  cursor <- write_at(cursor, x, y, "?")
   res <- ""
   acceptable <- c(letters, toupper(letters), 0:9, " ", "!", "-", "_")
   while (TRUE) {
@@ -247,31 +241,30 @@ get_input <- function(G, x, y, max_len, col = 216, dotcol = 255) {
     if ((kp %in% acceptable) && (cur_pos <= max_len)) {
       res <- paste0(res, kp)
       set_colour(col)
-      G$cursor %<>% write_at(x + (cur_pos - 1), y, kp)
-      G$cursor %<>% write("?")
+      cursor <- write_at(cursor, x + (cur_pos - 1), y, kp)
+      cursor <- write(cursor, "?")
       cur_pos <- cur_pos + 1
 
     } else if ((kp == "backspace") && (cur_pos > 1)) {
       res <- substring(res, 1, nchar(res) - 1)
       cur_pos <- cur_pos - 1
       set_colour(col)
-      G$cursor %<>% write_at(x + (cur_pos - 1), y, "?")
+      cursor <- write_at(cursor, x + (cur_pos - 1), y, "?")
       set_colour(dotcol)
-      G$cursor %<>% write(".")
+      cursor <- write(cursor, ".")
 
 
     } else if (kp == "enter") {
-      G$text_input <- res
       if (nchar(res) < max_len) {
         set_colour(dotcol)
-        G$cursor %<>% write_at(x + (cur_pos - 1), y, ".")
+        cursor <- write_at(cursor, x + (cur_pos - 1), y, ".")
       } else {
-        G$cursor %<>% write_at(x + (cur_pos - 1), y, " ")
+        cursor <- write_at(cursor, x + (cur_pos - 1), y, " ")
       }
       break
     }
   }
-  G
+  list(cursor = cursor, res = res)
 }
 
 check_windows_ansi <- function() {

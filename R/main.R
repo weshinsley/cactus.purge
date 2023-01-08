@@ -34,27 +34,30 @@ launch <- function() {
   game <- function() {
     cat("\033[2J\033[;H")
 
-    G <- list(cursor = draw_tv_screen(60, 23),
-              tv_width = 60, tv_height = 23)
+    TV_WIDTH <- 60
+    TV_HEIGHT <- 23
+    cursor <- draw_tv_screen(TV_WIDTH, TV_HEIGHT)
 
     cursor_off()
 
     if (nrow(audio::audio.drivers()) == 0) {
-      G %<>% show_pic(pkg_file("gfx/nosound.txt"), pattern = "down")
+      cursor <- show_pic(cursor, pkg_file("gfx/nosound.txt"), pattern = "down")
       k <- keypress::keypress(block = TRUE)
-      G %<>% show_pic(pkg_file("gfx/empty.txt"), pattern = "up")
+      cursor <- show_pic(cursor, pkg_file("gfx/empty.txt"), pattern = "up")
     } else if (!check_sound_card()) {
-      G %<>% show_pic(pkg_file("gfx/nosoundcard.txt"), pattern = "down")
+      cursor <- show_pic(cursor, pkg_file("gfx/nosoundcard.txt"), pattern = "down")
       k <- keypress::keypress(block = TRUE)
-      G %<>% show_pic(pkg_file("gfx/empty.txt"), pattern = "up")
+      cursor <- show_pic(cursor, pkg_file("gfx/empty.txt"), pattern = "up")
     }
 
     while (TRUE) {
-      G %<>% main_title()
-      if (G$main_menu_result == "CACTZ") {
-        G %<>% cactz_title()
-      } else if (G$main_menu_result == "CACTUSKI") {
-        G %<>% cactuski_title()
+      res <- main_title(cursor)
+      cursor <- res$cursor
+      config <- res$config
+      if (res$res == "CACTZ") {
+        cursor <- cactz_title(cursor, config)
+      } else if (res$res == "CACTUSKI") {
+        cursor <- cactuski_title(cursor, config)
       } else {
         break
       }
