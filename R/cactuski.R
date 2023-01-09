@@ -1274,6 +1274,36 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
 ###############################################################################
 # Move miscellaneous floaters
 
+  cactuski_write_around_kenny <- function(x, y, str) {
+    if ((y >= G$ky + 3) || (y < G$ky)) { # no y-overlap with Kenny
+      G$cursor <- write_at(G$cursor, x, y, str)
+    } else {
+      nc <- raw_length(str)
+      intx <- intersect(G$kx:(G$kx + 2), x:(x + (nc - 1)))
+      if (length(intx) == 0) {   # No x-overlap with Kenny
+        G$cursor <- write_at(G$cursor, x, y, str)
+      } else {
+        # Print part of the string that doesn't overlap.
+        # Awkward as we (may) have colour codes in the string that
+        # we still need to respect, even if skipping characters
+        cha <- 1
+        for (i in seq_len(nc)) {
+          px <- x + (i - 1)
+          while (substr(str, cha, cha) == "\033") {
+            end_code <- as.integer(regexpr("m", substring(str, cha)))
+            G$cursor <- write_at(G$cursor, px, y, substr(str, cha, end_code))
+            str <- substring(str, end_code + 1)
+          }
+
+          if (!px %in% intx) {
+            G$cursor <- write_at(G$cursor, px, y, substr(str, cha, cha))
+            cha <- cha + 1
+          }
+        }
+      }
+    }
+  }
+
   cactuski_move_floaters <- function() {
     # No work?
     if (length(G$factive) == 0L) return()
@@ -1302,7 +1332,7 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
         next
       }
       if (G$fy[i] < 20L) {
-        G$cursor <- write_at(G$cursor, G$fx[i], G$fy[i], G$fspaces[i])
+        cactuski_write_around_kenny(G$fx[i], G$fy[i], G$fspaces[i])
       }
 
       G$fy[i] <- G$fy[i] - 1L
@@ -1320,11 +1350,11 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
 
       if ((G$fy[i] >= 0L) & (G$factive[i] > 0L)) {
         if (G$ftype[i] == 1L) { # Baddy
-          G$cursor <- write_at(G$cursor, G$fx[i], G$fy[i],
+          cactuski_write_around_kenny(G$fx[i], G$fy[i],
             paste0(G$CC[[sample(c(196L, 214L, 226L), 1L)]],
                    if (G$fdx[i] == -2L) "<=" else "=>"))
         } else {
-          G$cursor <- write_at(G$cursor, G$fx[i], G$fy[i], G$fstring[i])
+          cactuski_write_around_kenny(G$fx[i], G$fy[i], G$fstring[i])
         }
       } else {
 
@@ -1347,7 +1377,7 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
     G$cfalt <- if (G$cfalt == 4L) 0L else G$cfalt + 1L
 
     if (G$cfy < 20L) {
-      G$cursor <-  write_at(G$cursor, G$cfx, G$cfy, "   ")
+      cactuski_write_around_kenny(G$cfx, G$cfy, "   ")
     }
 
     G$cfr <- G$cfalt %% 2
@@ -1357,11 +1387,11 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
       yindex <- (G$T$top + G$cfy)
       yindex <- ifelse(yindex > 20L, yindex - 20L, yindex)
       G$cfx <- as.integer(G$T$left[yindex] + (G$cff * (G$T$right[yindex] - G$T$left[yindex])))
-      G$cursor <- write_at(G$cursor, G$cfx, G$cfy, G$fch[1L + G$cfr])
+      cactuski_write_around_kenny(G$cfx, G$cfy, G$fch[1L + G$cfr])
     }
 
     if ((G$cfy == G$ky + 2) && (G$cfx >= G$kx - 1)  && (G$cfx <= G$kx + 1)) {
-      G$cursor <- write_at(G$cursor, G$cfx, G$cfy, "   ")
+      cactuski_write_around_lenny(G$cfx, G$cfy, "   ")
       G$cfy <- (-1)
       if (G$config$audio) G$owfinch <- play_sound(G$owfinch)
       G$lives <- G$lives - 10
@@ -1371,18 +1401,18 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
   cactuski_move_wall <- function() {
     if (G$wy < 20L) {
       left_wall <- paste0(rep(" ", G$gapx - G$wx), collapse = "")
-      G$cursor <- write_at(G$cursor, G$wx, G$wy, left_wall)
+      cactuski_write_around_kenny(G$wx, G$wy, left_wall)
 
       if (G$wtype %in% c(3, 4, 5)) {
-        G$cursor <- write_at(G$cursor, G$gapx, G$wy,
-          paste0(G$CC[[196]], paste(rep(" ", G$gapwid), collapse="")))
+        cactuski_write_around_kenny(G$gapx, G$wy,
+          paste0(G$CC[[196]], paste(rep(" ", G$gapwid), collapse = "")))
         if (G$wtype == 5) { # Barrier just got shot
           G$wtype <- 1
         }
       }
 
       right_wall <- paste0(rep(' ', (G$wx + G$wwid) - (G$gapx + G$gapwid)), collapse = "")
-      G$cursor <- write_at(G$cursor, G$gapwid + G$gapx, G$wy, paste0(G$CC[[248]], right_wall))
+      cactuski_write_around_kenny(G$gapwid + G$gapx, G$wy, paste0(G$CC[[248]], right_wall))
     }
 
     G$wy <- G$wy - 1
@@ -1400,16 +1430,16 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
     }
 
     left_wall <- paste0(rep("#", G$gapx - G$wx), collapse = "")
-    G$cursor <- write_at(G$cursor, G$wx, G$wy, paste0(G$CC[[248]], left_wall))
+    cactuski_write_around_kenny(G$wx, G$wy, paste0(G$CC[[248]], left_wall))
 
     if (G$wtype %in% c(3, 4)) {
-      G$cursor <- write_at(G$cursor, G$gapx, G$wy,
-                           paste0(G$CC[[196]], paste(rep("X", G$gapwid), collapse="")))
+      cactuski_write_around_kenny(G$gapx, G$wy,
+        paste0(G$CC[[196]], paste(rep("X", G$gapwid), collapse="")))
     }
 
     right_wall <- paste0(rep('#', (G$wx + G$wwid) - (G$gapx + G$gapwid)), collapse = "")
-    G$cursor <- write_at(G$cursor, G$gapwid + G$gapx, G$wy,
-                         paste0(G$CC[[248]], right_wall))
+    cactuski_write_around_kenny(G$gapwid + G$gapx, G$wy,
+      paste0(G$CC[[248]], right_wall))
 
   }
 
