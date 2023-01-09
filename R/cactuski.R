@@ -60,6 +60,9 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
     G$jskiright <- paste0(skil, " ' ", skir, "'")
     G$lskihole <- paste0(skil, "\\ ")
     G$rskihole <- paste0(skir, "/")
+    G$wallcoll <- paste0(cl, "<")
+    G$wallcolm <- paste0(cm, "%")
+    G$wallcolr <- paste0(cr, ">")
   }
 
   ##############################################################################
@@ -935,12 +938,15 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
           if (i == 8) {
             G$cursor <- write_at(G$cursor, G$kx, G$ky, "   ")
             G$cursor <- write_at(G$cursor, G$kx - 2, G$ky + 2,
-              paste0(G$CC[[28]], "<<", G$CC[[46]], "%%", G$CC[[28]], ">>"))
+              paste0(G$wallcoll, G$wallcoll, G$wallcolm, G$wallcolm,
+                     G$wallcolr, G$wallcolr))
 
           } else if (i == 16) {
             G$cursor <- write_at(G$cursor, G$kx, G$ky + 1, "   ")
             G$cursor <- write_at(G$cursor, G$kx - 3, G$ky + 2,
-              paste0(G$CC[[28]], "<<<", G$CC[[46]], "%%%", G$CC[[28]], ">>>"))
+              paste0(G$wallcoll, G$wallcoll, G$wallcoll,
+                     G$wallcolm, G$wallcolm, G$wallcolm,
+                     G$wallcolr, G$wallcolr, G$wallcolr))
 
           } else if (i == 24) {
             G$cursor <- write_at(G$cursor, G$kx - 3, G$ky + 2,
@@ -1120,7 +1126,7 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
 
           } else if (death_steps == 40) {
             G$cursor <- write_at(G$cursor, G$fx[index], G$ky + 3,
-                                 paste0(G$C[[145]], "\\_/"))
+                                 paste0(G$CC[[145]], "\\_/"))
           }
         }
         cactuski_update_lives()
