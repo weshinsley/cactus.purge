@@ -37,6 +37,9 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
       paste0(G$CC[[117]], "+", G$CC[[214]], "!", G$CC[[87]], "x"),
       paste0(G$CC[[159]], "x", G$CC[[178]], "?", G$CC[[195]], "+")))
 
+  G$fch <- c(paste0(G$CC[[228]], "^", G$CC[[172]], "8", G$CC[[228]], "^"),
+             paste0(G$CC[[226]], "v", G$CC[[172]], "8", G$CC[[226]], "v"))
+
   set_colour(15)
 
   cactuski_colour_kenny <- function() {
@@ -55,9 +58,11 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
     G$jskidown <- paste0(skil, "' ", skir, "'")
     G$jskileft <- paste0(skil, "' ", skir, "' ")
     G$jskiright <- paste0(skil, " ' ", skir, "'")
+    G$lskihole <- paste0(skil, "\\ ")
+    G$rskihole <- paste0(skir, "/")
   }
 
-  ################################################################################
+  ##############################################################################
   # Draw initial track
 
   cactuski_setup <- function(wid = 28) {
@@ -81,7 +86,7 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
     G$cursor <- write_at(G$cursor, 40L, 22L, "#", 244)
   }
 
-  ################################################################################
+  ##############################################################################
   # (Re)-start - initialise all the clutter
 
   cactuski_restart <- function() {
@@ -131,16 +136,9 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
     G$cff <- 0.5
     G$cfr <- 0L
     G$cfalt <- 0L
-    G$fch <- c(paste0(get_colour(228),"^",
-                      get_colour(172),"8",
-                      get_colour(228),"^"),
-               paste0(get_colour(226),"v",
-                      get_colour(172),"8",
-                      get_colour(226),"v"))
-
   }
 
-  ################################################################################
+  ##############################################################################
   # Set up initial track (maths)
 
   cactuski_init_track <- function(T = list()) {
@@ -684,7 +682,8 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
   }
 
   cactuski_update_score <- function() {
-    tscore <- formatC(G$score/100, width = 10, format = "f", digits = 2, flag = "0")
+    tscore <- formatC(G$score/100, width = 10, format = "f",
+                      digits = 2, flag = "0")
     G$cursor <- write_at(G$cursor, 49, 21, tscore, 51)
   }
 
@@ -694,7 +693,8 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
         "        NA", sample(c(196, 160, 124, 88, 52), 1))
       return()
     }
-    tlives <- formatC(G$lives/100, width = 10, format = "f", digits = 2, flag = "0")
+    tlives <- formatC(G$lives/100, width = 10, format = "f",
+                      digits = 2, flag = "0")
     G$cursor <- write_at(G$cursor, 49, 22, tlives, col)
   }
 
@@ -727,23 +727,24 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
 
       set_colour(222)
       left_str <-
-        ifelse(dl < dl_prev, paste0("/", strrep(" ", dl_prev - dl)),
-          ifelse(dl == dl_prev, "|",
-            paste0(paste(G$left_track[dl_prev:(dl-1)], collapse=""), "\\")))
+        if (dl < dl_prev) paste0("/", strrep(" ", dl_prev - dl)) else
+          if (dl == dl_prev) "|" else
+            paste0(paste(G$left_track[dl_prev:(dl-1)], collapse = ""), "\\")
 
       G$cursor <- write_at(G$cursor, min(dl, dl_prev), y, left_str)
 
       set_colour(222)
-      right_str <- ifelse(dr < dr_prev,
-                     paste0("/", paste(G$right_track[dr:(dr_prev-1)], collapse = "")),
-                       ifelse(dr == dr_prev, "|",
-                         paste0(strrep(" ", dr - dr_prev), "\\")))
+      right_str <-
+        if (dr < dr_prev) paste0("/",
+                            paste(G$right_track[dr:(dr_prev-1)],
+                                            collapse = "")) else
+          if (dr == dr_prev) "|" else paste0(strrep(" ", dr - dr_prev), "\\")
 
       G$cursor <- write_at(G$cursor, min(dr, dr_prev), y, right_str)
 
-      if (y < 19) {
-        yline <- ifelse(yline == 20, 1, yline + 1)
-        ylinem1 <- ifelse(ylinem1 == 20, 1, ylinem1 + 1)
+      if (y < 19L) {
+        yline <- if (yline == 20L) 1L else (yline + 1L)
+        ylinem1 <- if (ylinem1 == 20L) 1L else (ylinem1 + 1L)
       }
     }
   }
@@ -901,11 +902,14 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
     }
 
     G$T$next_wiggle_in <- G$T$next_wiggle_in - 1L
-    G$T$mid[next_line] <- G$T$origin_x + as.integer((G$T$amplitude * G$T$direction * 0.5 *
+    G$T$mid[next_line] <- G$T$origin_x +
+      as.integer((G$T$amplitude * G$T$direction * 0.5 *
       (1 + cos(pi + (pi * ((G$T$period - G$T$next_wiggle_in) / G$T$period))))))
 
-    G$T$left[next_line] <- max(2, G$T$mid[next_line] - ((G$T$wid[next_line] %/% 2) + 1))
-    G$T$right[next_line] <- min(58, G$T$mid[next_line] + (G$T$wid[next_line] %/% 2))
+    G$T$left[next_line] <- max(2, G$T$mid[next_line] -
+                                 ((G$T$wid[next_line] %/% 2) + 1))
+    G$T$right[next_line] <- min(58, G$T$mid[next_line] +
+                                  (G$T$wid[next_line] %/% 2))
 
     G$T$top <- if (G$T$top == 20) 1 else G$T$top + 1
 
@@ -1083,14 +1087,14 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
         if (G$kx != G$fx[index]) {
           G$cursor <- write_at(G$cursor, G$kx, G$ky, "   ")
           G$cursor <- write_at(G$cursor, G$fx[index], G$ky,
-            paste0(G$CC[[51]], "\\ /"))
+            paste0(G$lskihole, G$rskihole))
           G$cursor <- write_at(G$cursor, G$kx, G$ky + 1, "   ")
           G$cursor <- write_at(G$cursor, G$fx[index], G$ky + 1, G$body)
           G$cursor <- write_at(G$cursor, G$kx, G$ky + 2, "   ")
           G$cursor <- write_at(G$cursor, G$fx[index], G$ky + 2, G$body)
           G$cursor <- write_at(G$cursor, G$kx, G$ky + 3, "   ")
           G$cursor <- write_at(G$cursor, G$fx[index], G$ky + 3,
-            paste0(G$CC[[145]], "\\", G$CC[[28]], "%", G$CC[[145]], "/"))
+            paste0(G$CC[[145]], "\\%/"))
 
         }
 
@@ -1102,17 +1106,17 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
           if (death_steps == 85) {
             G$cursor <- write_at(G$cursor, G$fx[index], G$ky, "   ")
             G$cursor <- write_at(G$cursor, G$fx[index], G$ky + 1,
-                                 paste0(G$CC[[51]], "\\ /"))
+                                 paste0(paste0(G$lskihole, G$rskihole)))
 
           } else if (death_steps == 70) {
             G$cursor <- write_at(G$cursor, G$fx[index], G$ky + 1, "   ")
             G$cursor <- write_at(G$cursor, G$fx[index], G$ky + 2,
-                                 paste0(G$CC[[51]], "\\ /"))
+                                 paste0(paste0(G$lskihole, G$rskihole)))
 
           } else if (death_steps == 55) {
             G$cursor <- write_at(G$cursor, G$fx[index], G$ky + 2, "   ")
             G$cursor <- write_at(G$cursor, G$fx[index], G$ky + 3,
-              paste0(G$CC[[145]], "\\", G$CC[[51]], "V", G$CC[[145]], "/"))
+              paste0(G$CC[[145]], "\\V/"))
 
           } else if (death_steps == 40) {
             G$cursor <- write_at(G$cursor, G$fx[index], G$ky + 3,
@@ -1128,7 +1132,8 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
 
       } else if (G$ftype[index] == 5L) {
         G$factive[index] <- 0L
-        G$cursor <- write_at(G$cursor, G$fx[index], G$fy[index], G$fspaces[index])
+        G$cursor <- write_at(G$cursor, G$fx[index], G$fy[index],
+                             G$fspaces[index])
         G$lives <- G$lives + 5L
         if (G$config$audio) {
           if (sample(10L, 1L) != 1L) {
@@ -1146,7 +1151,8 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
         if ((G$kx >= G$fx[index] - 2L) && (G$kx <= G$fx[index] + 2L)) {
           if (G$config$audio) G$splat <- play_sound(G$splat)
           if (G$kx >= G$fx[index]) G$brownleft <- TRUE
-          if ((G$kx >= G$fx[index] - 1L) && (G$kx <= G$fx[index] + 1L)) G$brownmid <- TRUE
+          if ((G$kx >= G$fx[index] - 1L) &&
+              (G$kx <= G$fx[index] + 1L)) G$brownmid <- TRUE
           if (G$kx <= G$fx[index]) G$brownright <- TRUE
           cactuski_colour_kenny()
           G$factive[index] <- 0L
@@ -1166,7 +1172,9 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
   ######################################################
   # You got assassinated by a subnano rabbit antibody
 
-    if ((G$fx[index] >= (G$kx - 1L)) & (G$fx[index] <= G$kx + 2L) & (G$ftype[index] == 1L)) {
+    if ((G$fx[index] >= (G$kx - 1L)) & (G$fx[index] <= G$kx + 2L) &
+        (G$ftype[index] == 1L)) {
+
       G$cursor <- pos_at(G$cursor, 0L, 20L)
       if (G$config$audio) G$splat <- play_sound(G$splat)
       for (i in seq(99L, 0L)) {
@@ -1195,7 +1203,9 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
     # Laser hit something
 
     if ((G$ly %in% G$fy) || ((G$ly + 1L) %in% G$fy)) {
-      index <- min(which(G$ly %in% G$fy)[1L], which((G$ly + 1L) %in% G$fy)[1L], na.rm = TRUE)
+      index <- min(which(G$ly %in% G$fy)[1L],
+                   which((G$ly + 1L) %in% G$fy)[1L], na.rm = TRUE)
+
       if (G$factive[index] == 1L) {
         if (G$ftype[index] == 1L) {  # Baddy
           if ((G$lx == G$fx[index]) || (G$lx == G$fx[index] + 1L)) {
@@ -1339,10 +1349,14 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
 
       if (G$ftype[i] == 1L) { # Baddy - do horizontal movement
         G$fx[i] <- G$fx[i] + G$fdx[i]
-        G$fx[i] <- if (G$fx[i] < G$fleftlimit[i] + 1L) G$fleftlimit[i] + 1L else G$fx[i]
-        G$fx[i] <- if (G$fx[i] > G$frightlimit[i] - 2L) G$frightlimit[i] - 2L else G$fx[i]
+        G$fx[i] <- if (G$fx[i] < G$fleftlimit[i] + 1L)
+          G$fleftlimit[i] + 1L else G$fx[i]
+        G$fx[i] <- if (G$fx[i] > G$frightlimit[i] - 2L)
+          G$frightlimit[i] - 2L else G$fx[i]
 
-        if ((G$fx[i] == G$fleftlimit[i] + 1L) | (G$fx[i] == G$frightlimit[i] - 2L)) {
+        if ((G$fx[i] == G$fleftlimit[i] + 1L) |
+            (G$fx[i] == G$frightlimit[i] - 2L)) {
+
           G$fdx[i] <- (-G$fdx[i])
           if (G$config$audio) G$bbo <- play_sound(G$bbo)
         }
@@ -1386,7 +1400,8 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
     if (G$cfy >= 0L) {
       yindex <- (G$T$top + G$cfy)
       yindex <- ifelse(yindex > 20L, yindex - 20L, yindex)
-      G$cfx <- as.integer(G$T$left[yindex] + (G$cff * (G$T$right[yindex] - G$T$left[yindex])))
+      G$cfx <- as.integer(G$T$left[yindex] +
+                            (G$cff * (G$T$right[yindex] - G$T$left[yindex])))
       cactuski_write_around_kenny(G$cfx, G$cfy, G$fch[1L + G$cfr])
     }
 
@@ -1411,8 +1426,10 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
         }
       }
 
-      right_wall <- paste0(rep(' ', (G$wx + G$wwid) - (G$gapx + G$gapwid)), collapse = "")
-      cactuski_write_around_kenny(G$gapwid + G$gapx, G$wy, paste0(G$CC[[248]], right_wall))
+      right_wall <- paste0(rep(' ', (G$wx + G$wwid) -
+                                    (G$gapx + G$gapwid)), collapse = "")
+      cactuski_write_around_kenny(G$gapwid + G$gapx, G$wy,
+                                  paste0(G$CC[[248]], right_wall))
     }
 
     G$wy <- G$wy - 1
@@ -1424,7 +1441,9 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
 
     if (G$gapdx !=0) {
       G$gapx <- G$gapx + G$gapdx
-      if ((G$gapx + G$gapwid >= (G$wx + G$wwid - 1)) || (G$gapx <= (G$wx + 1))) {
+      if ((G$gapx + G$gapwid >= (G$wx + G$wwid - 1)) ||
+          (G$gapx <= (G$wx + 1))) {
+
         G$gapdx <- 0 - G$gapdx
       }
     }
@@ -1437,7 +1456,9 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
         paste0(G$CC[[196]], paste(rep("X", G$gapwid), collapse="")))
     }
 
-    right_wall <- paste0(rep('#', (G$wx + G$wwid) - (G$gapx + G$gapwid)), collapse = "")
+    right_wall <- paste0(rep('#', (G$wx + G$wwid) -
+                                   (G$gapx + G$gapwid)), collapse = "")
+
     cactuski_write_around_kenny(G$gapwid + G$gapx, G$wy,
       paste0(G$CC[[248]], right_wall))
 
@@ -1469,9 +1490,12 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
       }
       if ((G$ky + 3) >= 0) G$cursor <- write_at(G$cursor, G$kx, G$ky + 3, "   ")
       G$ky <- G$ky - 1
-      if ((G$ky + 3) >= 0) G$cursor <- write_at(G$cursor, G$kx, G$ky + 3, G$skidown)
-      if ((G$ky + 2) >= 0) G$cursor <- write_at(G$cursor, G$kx, G$ky + 2, G$body)
-      if ((G$ky + 1) >= 0) G$cursor <- write_at(G$cursor, G$kx, G$ky + 1, G$body)
+      if ((G$ky + 3) >= 0) G$cursor <-
+        write_at(G$cursor, G$kx, G$ky + 3, G$skidown)
+      if ((G$ky + 2) >= 0) G$cursor <-
+        write_at(G$cursor, G$kx, G$ky + 2, G$body)
+      if ((G$ky + 1) >= 0) G$cursor <-
+        write_at(G$cursor, G$kx, G$ky + 1, G$body)
       if (G$ky >= 1) G$cursor <- write_at(G$cursor, G$kx, G$ky, G$body)
       waitr::wait_until(time + 100)
     }
@@ -1526,13 +1550,14 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
         G$cursor <- show_pic(G$cursor, pkg_file("gfx/cactuski-go.txt"), "up")
         waitr::wait_for(1000)
 
-        G$msgs <- c(paste0("$021.$027.$033.$039.$045.$051.$050.$049.$048. ",
-                  "$226You killed Kenny!! $048.$049.$050.$051.$045.",
-                  "$039.$033.$027.$021."),
-                  paste0("$237.$238.$239.$240.$241.$242.$243.$244.$245.$246.$247.",
-                         "$248.$249.$250.$251.$252.$253.$254.$255.",
-                         "$255.$254.$253.$252.$251.$250.$249.$248.$247.$246.",
-                         "$245.$244.$243.$242.$241.$240.$239.$238.$237."))
+        G$msgs <- c(
+          paste0("$021.$027.$033.$039.$045.$051.$050.$049.$048. ",
+                 "$226You killed Kenny!! $048.$049.$050.$051.$045.",
+                 "$039.$033.$027.$021."),
+          paste0("$237.$238.$239.$240.$241.$242.$243.$244.$245.$246.$247.",
+                 "$248.$249.$250.$251.$252.$253.$254.$255.",
+                 "$255.$254.$253.$252.$251.$250.$249.$248.$247.$246.",
+                 "$245.$244.$243.$242.$241.$240.$239.$238.$237."))
         G$msg_pointer <- 1
         G$msg_x <- 1
         while ((length(G$msgs) > 1) || (G$msg_x < 39)) {
@@ -1591,4 +1616,4 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
   return(G$cursor)
 }
 
-#########################################
+################################################################################
