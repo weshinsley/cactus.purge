@@ -1412,7 +1412,7 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
     }
 
     if ((G$cfy == G$ky + 2) && (G$cfx >= G$kx - 1)  && (G$cfx <= G$kx + 1)) {
-      cactuski_write_around_lenny(G$cfx, G$cfy, "   ")
+      cactuski_write_around_kenny(G$cfx, G$cfy, "   ")
       G$cfy <- (-1)
       if (G$config$audio) G$owfinch <- play_sound(G$owfinch)
       G$lives <- G$lives - 10
