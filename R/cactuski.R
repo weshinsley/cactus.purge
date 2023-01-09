@@ -1587,12 +1587,12 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
 
     cactuski_wiggle_track()
     cactuski_move_laser()
-    if (G$cfy != -1) cactuski_move_finch()
+    if (G$cfy != -1L) cactuski_move_finch()
 
     if (G$bossy != -1) cactuski_do_bosses()
     next_frame <- waitr::wait_until(next_frame) + 25
     cactuski_move_laser()
-    if (G$cfy != -1) cactuski_move_finch()
+    if (G$cfy != -1L) cactuski_move_finch()
 
     next_frame <- waitr::wait_until(next_frame) + 25
     G$score <- G$score + 7
