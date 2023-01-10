@@ -204,6 +204,7 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
   G$elec <- load_sound(pkg_file("audio/cactuski-elec.wav"), config)
   G$bgo <- load_sound(pkg_file("audio/cactuski-baddiego.wav"), config)
   G$bbo <- load_sound(pkg_file("audio/cactuski-baddiebounce.wav"), config)
+  G$boing <- load_sound(pkg_file("audio/cactuski-boing.wav"), config)
   G$boom <- load_sound(pkg_file("audio/cactuski-boom.wav"), config)
   G$bump <- load_sound(pkg_file("audio/cactuski-bump.wav"), config)
   G$blip <- load_sound(pkg_file("audio/cactuski-blip.wav"), config)
@@ -846,9 +847,8 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
     } else if (kp == "j") {
       if (G$jumping == 0) {
         G$jumping <- 5
-        #G$boing <- play_sound(G$boing)
+        G$boing <- play_sound(G$boing)
       }
-
 
     # Test hole
     } else if ((kp == "h") || (kp == "f") || (kp == "s") || (kp == "t")) {
