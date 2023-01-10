@@ -417,7 +417,7 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
   }
 
   cactuski_incoming_finch <- function(px = NULL) {
-    if (G$cfy != -1) return()
+    if (G$cfy != -1L) return()
     G$cfy <- 19L
     G$cfr <- 1L
     yindex <- ifelse(G$T$top == 1L, 19L, G$T$top - 1L)
@@ -1307,8 +1307,9 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
           px <- x + (i - 1)
           while (substr(str, cha, cha) == "\033") {
             end_code <- as.integer(regexpr("m", substring(str, cha)))
-            G$cursor <- write_at(G$cursor, px, y, substr(str, cha, end_code))
-            str <- substring(str, end_code + 1)
+            G$cursor <- write_at(G$cursor, px, y,
+                                 substr(str, cha, cha + end_code))
+            str <- substring(str, cha + end_code + 1)
           }
 
           if (!px %in% intx) {
@@ -1405,15 +1406,17 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
 
     if (G$cfy >= 0L) {
       yindex <- (G$T$top + G$cfy)
-      yindex <- ifelse(yindex > 20L, yindex - 20L, yindex)
+      yindex <- if (yindex > 20L) yindex - 20L else yindex
       G$cfx <- as.integer(G$T$left[yindex] +
-                            (G$cff * (G$T$right[yindex] - G$T$left[yindex])))
+        (G$cff * (G$T$right[yindex] - G$T$left[yindex])))
       cactuski_write_around_kenny(G$cfx, G$cfy, G$fch[1L + G$cfr])
     }
 
-    if ((G$cfy == G$ky + 2) && (G$cfx >= G$kx - 1)  && (G$cfx <= G$kx + 1)) {
+    # Actual collision
+
+    if ((G$cfy == G$ky + 2L) && (G$cfx >= G$kx - 1L)  && (G$cfx <= G$kx + 1L)) {
       cactuski_write_around_kenny(G$cfx, G$cfy, "   ")
-      G$cfy <- (-1)
+      G$cfy <- (-1L)
       if (G$config$audio) G$owfinch <- play_sound(G$owfinch)
       G$lives <- G$lives - 10
     }
@@ -1587,12 +1590,12 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
 
     cactuski_wiggle_track()
     cactuski_move_laser()
-    if (G$cfy != -1L) cactuski_move_finch()
+    if (G$cfy >= 0) cactuski_move_finch()
 
     if (G$bossy != -1) cactuski_do_bosses()
     next_frame <- waitr::wait_until(next_frame) + 25
     cactuski_move_laser()
-    if (G$cfy != -1L) cactuski_move_finch()
+    if (G$cfy >= 0) cactuski_move_finch()
 
     next_frame <- waitr::wait_until(next_frame) + 25
     G$score <- G$score + 7
