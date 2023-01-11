@@ -49,9 +49,10 @@ launch <- function() {
       k <- keypress::keypress(block = TRUE)
       cursor <- show_pic(cursor, pkg_file("gfx/empty.txt"), pattern = "up")
     }
-
+    first <- TRUE
     while (TRUE) {
-      res <- main_title(cursor)
+      res <- main_title(cursor, first = first)
+      first <- FALSE
       cursor <- res$cursor
       config <- res$config
       if (res$res == "CACTZ") {

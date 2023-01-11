@@ -196,6 +196,7 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
 
   # The sounds
 
+  G$augo <- load_sound(pkg_file("audio/cactuski-go.wav"), config)
   G$win <- load_sound(pkg_file("audio/cactuski-win.wav"), config)
   G$pew <- load_sound(pkg_file("audio/cactuski-pew.wav"), config)
   G$squelch <- load_sound(pkg_file("audio/cactuski-squelch.wav"), config)
@@ -1556,6 +1557,7 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
         G$T <- cactuski_init_track(G$T)
 
       } else {
+        G$augo <- play_sound(G$augo)
         G$cursor <- show_pic(G$cursor, pkg_file("gfx/cactuski-go.txt"), "up")
         waitr::wait_for(1000)
 
@@ -1593,12 +1595,12 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
     if (G$cfy >= 0) cactuski_move_finch()
 
     if (G$bossy != -1) cactuski_do_bosses()
-    next_frame <- waitr::wait_until(next_frame) + 25
+    next_frame <- waitr::wait_until(next_frame) + 25L
     cactuski_move_laser()
     if (G$cfy >= 0) cactuski_move_finch()
 
-    next_frame <- waitr::wait_until(next_frame) + 25
-    G$score <- G$score + 7
+    next_frame <- waitr::wait_until(next_frame) + 25L
+    G$score <- G$score + 7L
     cactuski_do_messages()
     cactuski_update_score()
     cactuski_update_lives()
@@ -1611,17 +1613,17 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
 
   while (!is.na(keypress::keypress(block = FALSE))) {}
 
-  G$score <- formatC(G$score/100, format = "f", digits = 2, flag = "0")
+  G$score <- formatC(G$score/100L, format = "f", digits = 2, flag = "0")
   if (good_score(user_file("cactuski-hs.csv.xz"), G$score)) {
-    G$cursor <- fade_text(G$cursor, 30, 16, "GREAT SCORE! TYPE YOUR NAME",
+    G$cursor <- fade_text(G$cursor, 30L, 16L, "GREAT SCORE! TYPE YOUR NAME",
                           UNICORN, FADE_IN, triple = TRUE)
-    G$cursor <- fade_text(G$cursor, 25, 19, "..........",
+    G$cursor <- fade_text(G$cursor, 25L, 19L, "..........",
                           GREY_SCALE, FADE_IN, align = LEFT)
-    res <- get_input(G$cursor, 25, 19, 10)
+    res <- get_input(G$cursor, 25L, 19L, 10L)
     G$cursor <- res$cursor
     insert_score(user_file("cactuski-hs.csv.xz"), res$res, G$score)
   }
-  G$cursor <- clear_pic(G$cursor, 23)
+  G$cursor <- clear_pic(G$cursor, 23L)
   return(G$cursor)
 }
 

@@ -1,6 +1,6 @@
 ################################################################################
 
-main_title <- function(cursor, TV_WIDTH = 60, TV_HEIGHT = 23) {
+main_title <- function(cursor, TV_WIDTH = 60, TV_HEIGHT = 23, first = TRUE) {
   config <- load_config()
   config <- check_sound_driver(config)
 
@@ -19,9 +19,10 @@ main_title <- function(cursor, TV_WIDTH = 60, TV_HEIGHT = 23) {
   instr1 <- "  : Sound             : Exit"
 
   game1 <- "SELECT CHAPTER...   [1] CACTZ   [2] CACTUSKI"
-
-  cursor <- fade_text(cursor, 30, 21, name, GREY_SCALE, FADE_IN_OUT,
-                      delay = 500, triple = TRUE)
+  if (first) {
+    cursor <- fade_text(cursor, 30, 21, name, GREY_SCALE, FADE_IN_OUT,
+                        delay = 500, triple = TRUE)
+  }
   cursor <- fade_text(cursor, 30, 20, instr1, GREY_SCALE, FADE_IN)
 
   cursor <- write_at(cursor, 16, 20, "S", if (audio_avail) 46 else 244)
