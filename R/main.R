@@ -1,8 +1,6 @@
 ###############################################################################
 # The main program
 
-library(magrittr)
-
 #' End the therapeutic entertainment
 #'
 #' Gets called on exit, and hopefully will restore the terminal to the state
