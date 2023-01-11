@@ -2,11 +2,13 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
   options(warn=2)
 
   G <- new.env(parent = emptyenv())
+  G$DEBUG_HOOKS <- FALSE
   G$cursor <- cursor
   G$config <- config
   G$tv_height <- TV_HEIGHT
   G$tv_width <- TV_WIDTH
   G$CC <- lapply(1:255, get_colour)
+
 
   G$right_track <- c(
     rep("<", 50),
@@ -829,14 +831,8 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
       if ((G$jumping <= 1) && (G$ky > 0)) G$kdy <- -1
     } else if (kp == "down") {
       if ((G$jumping <= 1) && (G$ky < 14)) G$kdy <- 1
-    } else if (kp == "escape") {
-      cursor_on()
-      stop()
-    } else if (kp == "e") {
-      cactuski_end()
-      return()
-    }
-    else if (kp == "l") {
+
+    } else if (kp == "l") {
       if (!G$firing) {
         G$firing = TRUE
         G$lx <- G$kx + 1
@@ -850,12 +846,21 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
         G$jumping <- 5
         G$boing <- play_sound(G$boing)
       }
+    }
 
-    # Test hole
+    if (!G$DEBUG_HOOKS) return()
+
+    if (kp == "escape") {
+      cursor_on()
+      stop()
+
+    } else if (kp == "e") {
+      cactuski_end()
+      return()
+
     } else if ((kp == "h") || (kp == "f") || (kp == "s") || (kp == "t")) {
       cactuski_incoming_thing(kp)
 
-    # Test baddie
     } else if (kp == "b") {
       cactuski_incoming_baddy()
 
@@ -864,8 +869,6 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
 
     } else if (kp == "m") {
       G$thin <- (-2)
-
-    # Test wall
 
     } else if (kp == "w") {
       cactuski_incoming_wall(sample(1:4)[1])
@@ -876,6 +879,7 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
     } else if (kp == "q") {
       cactuski_incoming_boss("4;3;10")
     }
+    invisible()
   }
 
 ###############################################################################
