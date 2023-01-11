@@ -1184,7 +1184,7 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
   # You got assassinated by a subnano rabbit antibody
 
     if ((G$fx[index] >= (G$kx - 1L)) & (G$fx[index] <= G$kx + 2L) &
-        (G$ftype[index] == 1L)) {
+        (G$ftype[index] == 1L) && (G$jumping <= 1)) {
 
       G$cursor <- pos_at(G$cursor, 0L, 20L)
       if (G$config$audio) G$splat <- play_sound(G$splat)
