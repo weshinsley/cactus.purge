@@ -425,10 +425,14 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
     G$cfy <- 19L
     G$cfr <- 1L
     yindex <- ifelse(G$T$top == 1L, 19L, G$T$top - 1L)
-    G$cff <- sample(c(0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8), 1L)
+
     if (is.null(px)) {
       px <- as.integer(G$T$left[yindex] +
                          (G$cff * (G$T$right[yindex] - G$T$left[yindex])))
+      G$cff <- sample(c(0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8), 1L)
+    } else {
+      G$cff <- (px - G$T$left[yindex]) / (G$T$right[yindex] - G$T$left[yindex])
+      G$cff <- as.integer(G$cff * 10) / 10
     }
     G$cfx <- px
     if (G$config$audio) G$finch <- play_sound(G$finch)
@@ -1627,7 +1631,6 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
     G$cursor <- res$cursor
     insert_score(user_file("cactuski-hs.csv.xz"), res$res, G$score)
   }
-  G$cursor <- clear_pic(G$cursor, 23L)
   return(G$cursor)
 }
 
