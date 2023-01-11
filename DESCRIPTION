@@ -18,7 +18,6 @@ Imports:
   R.utils, 
   stringr, 
   RCurl, 
-  dplyr, 
   utils, 
   stats, 
   keypress, 

@@ -33,11 +33,12 @@ fade_text <- function(cursor, x, y, text, cols, fade_mode,
                       delay = 0, triple = FALSE, align = CENTRE,
                       fade_speed = 20, tv_width = 60) {
 
-
-  x <- max(0, min(tv_width, dplyr::case_when(
-    align == CENTRE ~ x - round(nchar(text) / 2),
-    align == RIGHT ~ x - nchar(text),
-    TRUE ~ x)))
+  if (align == CENTRE) {
+    x <- x - round(nchar(text) / 2)
+  } else if (align == RIGHT) {
+    x <- x - nchar(text)
+  }
+  x <- max(0, min(tv_width, x))
 
   col_span <- length(cols)
   if (fade_mode != FADE_OUT) {
