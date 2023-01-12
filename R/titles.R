@@ -137,7 +137,7 @@ cactuski_title <- function(cursor, config) {
                      get_colour(0,255),"BLACK",
                      get_colour(15, 0), " "))
 
-  lev <- 1
+  lev <- 2
 
   instr1 <- paste0(get_colour(46), "P", get_colour(15), ": PLAY   ",
               "             ", get_colour(207), " ", get_colour(15),
@@ -170,8 +170,8 @@ cactuski_title <- function(cursor, config) {
       lev <- lev + 1
       if (lev == 5) lev <- 1
       instr2 <- paste0(get_colour(159), "I", get_colour(15), ": INSTRUCTIONS   ",
-                       "    ", get_colour(207), "L", get_colour(15), ": ",
-                       levels[lev], "         ",
+                       "   ", get_colour(207), "L", get_colour(15), ": ",
+                       levels[lev], "          ",
                        get_colour(220), "H", get_colour(15), ": HI-SCORES   ")
 
       cursor <- write_at(cursor, 3, 22, instr2)
