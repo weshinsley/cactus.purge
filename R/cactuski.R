@@ -1165,14 +1165,16 @@ cactuski <- function(cursor, config, lev, TV_HEIGHT = 23, TV_WIDTH = 60) {
 
       } else if (G$ftype[index] == 6L) {
         if ((G$kx >= G$fx[index] - 2L) && (G$kx <= G$fx[index] + 2L)) {
-          if (G$config$audio) G$splat <- play_sound(G$splat)
-          if (G$kx >= G$fx[index]) G$brownleft <- TRUE
-          if ((G$kx >= G$fx[index] - 1L) &&
-              (G$kx <= G$fx[index] + 1L)) G$brownmid <- TRUE
-          if (G$kx <= G$fx[index]) G$brownright <- TRUE
-          cactuski_colour_kenny()
-          G$factive[index] <- 0L
-          G$cursor <- write_at(G$cursor, G$fx[index], G$fy[index], "   ")
+          if (G$jumping <= 1) {
+            if (G$config$audio) G$splat <- play_sound(G$splat)
+            if (G$kx >= G$fx[index]) G$brownleft <- TRUE
+            if ((G$kx >= G$fx[index] - 1L) &&
+                (G$kx <= G$fx[index] + 1L)) G$brownmid <- TRUE
+            if (G$kx <= G$fx[index]) G$brownright <- TRUE
+            cactuski_colour_kenny()
+            G$factive[index] <- 0L
+            G$cursor <- write_at(G$cursor, G$fx[index], G$fy[index], "   ")
+          }
         }
         return()
       }

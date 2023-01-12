@@ -141,11 +141,11 @@ cactuski_title <- function(cursor, config) {
 
   instr1 <- paste0(get_colour(46), "P", get_colour(15), ": PLAY   ",
               "             ", get_colour(207), " ", get_colour(15),
-              "                      ",
+              "                       ",
                    get_colour(196), "Q", get_colour(15), ": QUIT")
 
   instr2 <- paste0(get_colour(159), "I", get_colour(15), ": INSTRUCTIONS   ",
-                   "   ", get_colour(207), "L", get_colour(15), ": ",
+                   "    ", get_colour(207), "L", get_colour(15), ": ",
                    levels[lev], "          ",
                    get_colour(220), "H", get_colour(15), ": HI-SCORES   ")
 
@@ -170,7 +170,7 @@ cactuski_title <- function(cursor, config) {
       lev <- lev + 1
       if (lev == 5) lev <- 1
       instr2 <- paste0(get_colour(159), "I", get_colour(15), ": INSTRUCTIONS   ",
-                       "   ", get_colour(207), "L", get_colour(15), ": ",
+                       "    ", get_colour(207), "L", get_colour(15), ": ",
                        levels[lev], "          ",
                        get_colour(220), "H", get_colour(15), ": HI-SCORES   ")
 
