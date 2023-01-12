@@ -1,7 +1,8 @@
-cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
+cactuski <- function(cursor, config, lev, TV_HEIGHT = 23, TV_WIDTH = 60) {
   options(warn=2)
 
   G <- new.env(parent = emptyenv())
+  G$lev <- lev
   G$DEBUG_HOOKS <- FALSE
   G$cursor <- cursor
   G$config <- config
@@ -231,7 +232,7 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
 
   # Predicting the future...
 
-  G$mscript <- read.csv(pkg_file("other/cactuski-scripts.csv"))
+  G$mscript <- read.csv(pkg_file(sprintf("other/cactuski-scripts%d.csv", lev)))
   G$mline <- NA
   G$mn <- 0
   G$mc <- 0
@@ -1608,7 +1609,7 @@ cactuski <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
     if (G$cfy >= 0) cactuski_move_finch()
 
     next_frame <- waitr::wait_until(next_frame) + 25L
-    G$score <- G$score + 7L
+    G$score <- G$score + 5L + G$lev
     cactuski_do_messages()
     cactuski_update_score()
     cactuski_update_lives()

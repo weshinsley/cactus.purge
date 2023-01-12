@@ -130,12 +130,29 @@ cactuski_title <- function(cursor, config) {
             overwrite = FALSE)
   cursor <- show_pic(cursor, pkg_file("gfx/cactuski.txt"))
   cursor <- draw_divider(cursor, 19)
+  levels <- c(paste0(get_colour(226), "NURSERY"),
+              paste0(get_colour(33), " BLUE  "),
+              paste0(get_colour(160), "  RED  "),
+              paste0(get_colour(15, 0), " ",
+                     get_colour(0,255),"BLACK",
+                     get_colour(15, 0), " "))
+
+  lev <- 1
+
   instr1 <- paste0(get_colour(46), "P", get_colour(15), ": PLAY   ",
-                   get_colour(159), "I", get_colour(15), ": INSTRUCTIONS   ",
-                   get_colour(220), "H", get_colour(15), ": HI-SCORES   ",
+              "             ", get_colour(207), " ", get_colour(15),
+              "                      ",
                    get_colour(196), "Q", get_colour(15), ": QUIT")
+
+  instr2 <- paste0(get_colour(159), "I", get_colour(15), ": INSTRUCTIONS   ",
+                   "   ", get_colour(207), "L", get_colour(15), ": ",
+                   levels[lev], "          ",
+                   get_colour(220), "H", get_colour(15), ": HI-SCORES   ")
+
+
   title1 <- "CACTUSKI!"
-  cursor <- write_at(cursor, 3, 22, instr1)
+  cursor <- write_at(cursor, 3, 21, instr1)
+  cursor <- write_at(cursor, 3, 22, instr2)
   cursor <- fade_text(cursor, 30, 20, title1, UNICORN, FADE_IN)
 
   page <- "T"
@@ -149,16 +166,26 @@ cactuski_title <- function(cursor, config) {
         cursor <- show_pic(cursor, pkg_file("gfx/cactuski-inst.txt"))
         page <- "I"
       }
+    } else if (kp == "l") {
+      lev <- lev + 1
+      if (lev == 5) lev <- 1
+      instr2 <- paste0(get_colour(159), "I", get_colour(15), ": INSTRUCTIONS   ",
+                       "    ", get_colour(207), "L", get_colour(15), ": ",
+                       levels[lev], "         ",
+                       get_colour(220), "H", get_colour(15), ": HI-SCORES   ")
+
+      cursor <- write_at(cursor, 3, 22, instr2)
 
     } else if (kp %in% c('p', 'q')) {
       cursor <- fade_text(cursor, 30, 20, title1, UNICORN, FADE_OUT)
       cursor <- clear_pic(cursor, 23)
       if (kp == 'p') {
-        cursor <- cactuski(cursor, config)
+        cursor <- cactuski(cursor, config, lev)
         cursor <- show_pic(cursor, pkg_file("gfx/cactuski.txt"))
         cursor <-  draw_divider(cursor, 19)
         page <- "T"
-        cursor <- write_at(cursor, 3, 22, instr1)
+        cursor <- write_at(cursor, 3, 21, instr1)
+        cursor <- write_at(cursor, 3, 22, instr2)
         cursor <- fade_text(cursor, 30, 20, title1, UNICORN, FADE_IN)
 
       } else {
