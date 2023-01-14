@@ -58,12 +58,13 @@ devtools::install_github("weshinsley/cactus.purge")
 
 * On Windows, the first time you run Cactus Purge, a registry key may
   need to be set to allow coloured output in your Command Prompt window.
-  The game will do this for you if you ask. IF you prefer to do it yourself, 
-  this will work from the command-line,
+  The game will detect the problem and offer to fix it for you, (after
+  which you need to open a fresh command prompt). If you prefer to fix
+  it yourself, then from the command-line:-
 ```
 REG ADD HKCU\CONSOLE /f /v VirtualTerminalLevel /t REG_DWORD /d 1
 ```
-  or, run `regedit`, and go to `Computer\HKEY_CURRENT_USER\Console` and
+  or, run `Registry Editor` (regedit), and go to `Computer\HKEY_CURRENT_USER\Console` and
   set the `VirtualTerminalLevel` to `1`.
 
 ## If 'RScript' is not recognised....
