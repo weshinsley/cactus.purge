@@ -7,30 +7,35 @@ scientists across the globe obliterated the cactus operator (`%<>%`) from
 their code, in an attempt to make their function arguments and returns
 more explicit. 
 
-It was a significant and critical time to be a data scientist, 
+It was a significant and critical time for epidemiology data scientists, 
 performing many late night data processing tasks, waiting for the inputs
-to arrive, if they ever did, coping with the inevitable change in date
-formats, column headers, and general interpretation of data, or the
+to arrive, if they ever did, coping with the inevitable changes in date
+format, column headers, and general interpretation of data, or the
 absence of data. 
 
-This package was designed to provide therapy to data scientists concerned
-with both the real-time modelling, and _the purge_. It is, some might 
+This package was designed to provide therapy to those scientists concerned
+with both the real-time modelling, and _the purge_. It is, also, some might 
 say, the pivotal moment where R at last reveals its true nature as a 
 potential retro-gaming platform. 
-
 
 ## Requirements
 
 * The package has been developed on Windows; it should also work nicely on 
   Mac OS.
 
-* On Linux, audio support is tricky, so you may need to run without sound.
+* On Linux, audio support is tricky. 
   You may have some luck with `sudo apt-get install portaudio19-dev` but
   so far it looks sketchy. Sometimes it works for a while then 
   crashes, or sometimes the audio driver chatters onto stdout, which
-  makes a mess on the game screen and disrupts cursor control.
+  makes a mess on the game screen and disrupts cursor control. 
+  
+  Linux users might need to turn sound off on the front page, to get a 
+  pleasant (but sadly quiet) gaming experience. I suggest in this sad case,
+  you make your own atmospheric sound effects as you play, and have a look
+  in the `inst/audio` folder for hints of what you're missing.
 
-  Feedback or suggestions to improve this are welcome.
+  Feedback or suggestions to address this terrible problem are welcome.
+  I'm not sure if WINE gives any hope?
 
 ## Execution
 
