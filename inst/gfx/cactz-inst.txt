@@ -3,7 +3,7 @@
  [0mhad [31;1menough[0m. She jumped into her Cessna 172 and flew out to 
  [0mdo some on-site Yellow Fever research. Unfortunately, back 
  [0mat the aerodrome, a batch of [32;1mpoorly formatted dates[0m caused 
- [0ma failure in the fueling system, which was not spotted, as 
+ [0ma failure in the fuelling system which was not spotted, as 
  [0mthe human validator was struck down with gout. Before long 
  [0mthe engine spluttered, and Katy had no option but to glide 
  [0mtowards an emergency landing in a field of cacti.          
