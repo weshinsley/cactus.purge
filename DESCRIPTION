@@ -20,6 +20,6 @@ Imports:
   RCurl, 
   utils, 
   stats, 
-  keypress, 
+  keypress (>= 1.3.0), 
   waitr,
   audio
