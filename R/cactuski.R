@@ -298,10 +298,10 @@ cactuski <- function(cursor, config, lev, TV_HEIGHT = 23, TV_WIDTH = 60) {
       }
     }
 
-    next_frame <- waitr::waitr_timestamp() + 50
+    next_frame <- waitr::waitr_timestamp() + 75
     for (i in 1:8) {
       draw_ring(rings_x[[i]], rings_y[[i]], flame[i])
-      next_frame <- waitr::wait_until(next_frame) + 50
+      next_frame <- waitr::wait_until(next_frame) + 75
     }
 
     for (i in 2:16) {
@@ -319,7 +319,7 @@ cactuski <- function(cursor, config, lev, TV_HEIGHT = 23, TV_WIDTH = 60) {
         fprev <- fprev - 1
         fnext <- fnext + 1
       }
-      next_frame <- waitr::wait_until(next_frame) + 50
+      next_frame <- waitr::wait_until(next_frame) + 75
     }
 
     set_colour(15)
@@ -1606,11 +1606,11 @@ cactuski <- function(cursor, config, lev, TV_HEIGHT = 23, TV_WIDTH = 60) {
     if (G$cfy >= 0) cactuski_move_finch()
 
     if (G$bossy != -1) cactuski_do_bosses()
-    next_frame <- waitr::wait_until(next_frame) + 25L
+    next_frame <- waitr::wait_until(next_frame) + 50L
     cactuski_move_laser()
     if (G$cfy >= 0) cactuski_move_finch()
 
-    next_frame <- waitr::wait_until(next_frame) + 25L
+    next_frame <- waitr::wait_until(next_frame) + 50L
     G$score <- G$score + 5L + G$lev
     cactuski_do_messages()
     cactuski_update_score()
