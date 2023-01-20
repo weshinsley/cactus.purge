@@ -2,6 +2,7 @@
 
 # The second chapter
 
+* 2.0.1 - Better level-based speed
 * 2.0.0 - Second Chapter
 
 # The first chapter
