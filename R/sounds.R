@@ -28,6 +28,7 @@ load_sound <- function(wav, config) {
 #' @return The updated list, in case the audio instance is no longer null.
 
 play_sound <- function(wavobj) {
+  stop_sound(wavobj)
   if (wavobj$enable) {
     wavobj$player <- audio::play(wavobj$wav)
   }

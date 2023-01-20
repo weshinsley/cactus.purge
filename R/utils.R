@@ -43,7 +43,7 @@ save_hiscores <- function(hs, f) {
 }
 
 good_score <- function(f, score) {
-  score > as.numeric(load_hiscores(f)$score[8])
+  as.numeric(score) > as.numeric(load_hiscores(f)$score[8])
 }
 
 insert_score <- function(f, name, score) {

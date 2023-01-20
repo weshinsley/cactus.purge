@@ -1,113 +1,206 @@
 ################################################################################
 
-main_title <- function(G) {
-  G$config <- load_config()
-  G$config %<>% check_sound_driver()
-  G %<>% draw_divider(19)
-  G %<>% show_pic(pkg_file("gfx/title.txt"))
+main_title <- function(cursor, TV_WIDTH = 60, TV_HEIGHT = 23, first = TRUE) {
+  config <- load_config()
+  config <- check_sound_driver(config)
+
+  cursor <- draw_divider(cursor, 19)
+  cursor <- show_pic(cursor, pkg_file("gfx/title.txt"))
+
   name <- "CACTUS PURGE"
   audio_avail <- (nrow(audio::audio.drivers()) > 0)
   if (audio_avail) {
     audio_avail <- check_sound_card()
   }
   if (!audio_avail) {
-    G$config$audio <- FALSE
+    config$audio <- FALSE
   }
 
-  instr1 <- " : Sound                : Exit               : Play"
+  instr1 <- "  : Sound             : Exit"
 
-  game1 <- "CHAPTER 1... CACTZ!"
+  game1 <- "SELECT CHAPTER...   [1] CACTZ   [2] CACTUSKI"
+  if (first) {
+    cursor <- fade_text(cursor, 30, 21, name, GREY_SCALE, FADE_IN_OUT,
+                        delay = 500, triple = TRUE)
+  }
+  cursor <- fade_text(cursor, 30, 20, instr1, GREY_SCALE, FADE_IN)
 
-  G %<>% fade_text(30, 21, name, GREY_SCALE, FADE_IN_OUT, delay = 500, triple = TRUE)
-  G %<>% fade_text(30, 20, instr1, GREY_SCALE, FADE_IN)
+  cursor <- write_at(cursor, 16, 20, "S", if (audio_avail) 46 else 244)
+  cursor <- write_at(cursor, 34, 20, "ESC", 46)
+  cursor <- write_at(cursor, 26, 20, if (config$audio) "ON " else "OFF", 195)
 
-  G$cursor %<>% write_at(4, 20, "S", ifelse(audio_avail, 46, 244))
-  G$cursor %<>% write_at(44, 20, "ENTER", 46)
-  G$cursor %<>% write_at(25, 20, "ESC", 46)
-  G$cursor %<>% write_at(13, 20, ifelse(G$config$audio, "ON ", "OFF"), 195)
+  cursor <- fade_text(cursor, 30, 22, game1, UNICORN, FADE_IN)
 
-  G %<>% fade_text(30, 22, game1, UNICORN, FADE_IN, fade_speed = 0.1)
+  cursor <- write_at(cursor, 28, 22, "[1]", 46)
+  cursor <- write_at(cursor, 40, 22, "[2]", 46)
 
   while (TRUE) {
     kp <- keypress::keypress(block = TRUE)
-    if (tolower(kp) %in% c("enter", "escape")) {
+    if (tolower(kp) %in% c("1", "2", "escape")) {
       break
     }
     if (tolower(kp) == "s") {
       if (audio_avail) {
-        G$config$audio <- 1 - G$config$audio
-        G$cursor %<>% write_at(13, 20, ifelse(G$config$audio, "ON ", "OFF"), 195)
+        config$audio <- 1 - config$audio
+        cursor <- write_at(cursor, 26, 20,
+                           ifelse(config$audio, "ON ", "OFF"), 195)
       }
     }
   }
 
-  G %<>% fade_text(30, 20, instr1, GREY_SCALE, FADE_OUT)
-  G %<>% fade_text(30, 22, game1, UNICORN, FADE_OUT)
+  cursor <- fade_text(cursor, 30, 20, instr1, GREY_SCALE, FADE_OUT)
+  cursor <- fade_text(cursor, 30, 22, game1, UNICORN, FADE_OUT)
   set_colour(15)
   if (kp == "escape") {
-    G %<>% clear_pic(G$tv_height)
-    G$cursor %<>% pos_at(0, G$tv_height + 2)
-    G$main_menu_result <- "EXIT"
+    cursor <- clear_pic(cursor, TV_HEIGHT)
+    cursor <- pos_at(cursor, 0, TV_HEIGHT + 2)
+    return(list(cursor = cursor, config = config, res = "EXIT"))
 
-  } else if (kp == "enter") {
-    G$main_menu_result <- "CACTZ"
-    save_config(G$config)
+  } else if (kp %in% c("1", "2")) {
+    save_config(config)
+    return(list(cursor = cursor, config = config,
+                res = c("CACTZ", "CACTUSKI")[as.integer(kp)]))
   }
 
-  G
+  invisible()
 }
 
 ################################################################################
 
-cactz_title <- function(G) {
+cactz_title <- function(cursor, config) {
   file.copy(pkg_file("other/cactz-hs.csv.xz"), user_file("cactz-hs.csv.xz"),
             overwrite = FALSE)
-  G %<>% show_pic(pkg_file("gfx/cactz.txt"))
-  G %<>% draw_divider(19)
+  cursor <- show_pic(cursor, pkg_file("gfx/cactz.txt"))
+  cursor <- draw_divider(cursor, 19)
   instr1 <- paste0(get_colour(46), "P", get_colour(15), ": PLAY   ",
                    get_colour(159), "I", get_colour(15), ": INSTRUCTIONS   ",
                    get_colour(220), "H", get_colour(15), ": HI-SCORES   ",
                    get_colour(196), "Q", get_colour(15), ": QUIT")
   title1 <- "CACTZ!"
-  G$cursor %<>% write_at(3, 22, instr1)
-  G %<>% fade_text(30, 20, title1, UNICORN, FADE_IN)
+  cursor <- write_at(cursor, 3, 22, instr1)
+  cursor <- fade_text(cursor, 30, 20, title1, UNICORN, FADE_IN)
 
   page <- "T"
   while (TRUE) {
     kp <- tolower(keypress::keypress(block = TRUE))
     if (kp == "i") {
       if (page == "I") {
-        G %<>% show_pic(pkg_file("gfx/cactz.txt"))
+        cursor <- show_pic(cursor, pkg_file("gfx/cactz.txt"))
         page <- "T"
       } else {
-        G %<>% show_pic(pkg_file("gfx/cactz-inst.txt"))
+        cursor <- show_pic(cursor, pkg_file("gfx/cactz-inst.txt"))
         page <- "I"
       }
 
     } else if (kp %in% c('p', 'q')) {
-      G %<>% fade_text(30, 20, title1, UNICORN, FADE_OUT)
-      G %<>% clear_pic(23)
+      cursor <- fade_text(cursor, 30, 20, title1, UNICORN, FADE_OUT)
+      cursor <- clear_pic(cursor, 23)
       if (kp == 'p') {
-         G %<>% cactz()
-         G %<>% show_pic(pkg_file("gfx/cactz.txt"))
-         G %<>% draw_divider(19)
+         cursor <- cactz(cursor, config)
+         cursor <- show_pic(cursor, pkg_file("gfx/cactz.txt"))
+         cursor <- draw_divider(cursor, 19)
          page <- "T"
-         G$cursor %<>% write_at(3, 22, instr1)
-         G %<>% fade_text(30, 20, title1, UNICORN, FADE_IN)
+         cursor <- write_at(cursor, 3, 22, instr1)
+         cursor <- fade_text(cursor, 30, 20, title1, UNICORN, FADE_IN)
 
       } else {
-        return(G)
+        return(cursor)
       }
     } else if (kp == 'h') {
       if (page != "H") {
-        G %<>% clear_pic(19)
-        G %<>% fade_text(30, 1, "CACTZ HALL OF FAME", UNICORN, FADE_IN)
-        G %<>% snazzy_scores(user_file("cactz-hs.csv.xz"), FADE_IN)
+        cursor <- clear_pic(cursor, 19)
+        cursor <- fade_text(cursor, 30, 1, "CACTZ HALL OF FAME", UNICORN, FADE_IN)
+        cursor <- snazzy_scores(cursor, user_file("cactz-hs.csv.xz"), FADE_IN)
         page <- "H"
       } else {
-        G %<>% snazzy_scores(user_file("cactz-hs.csv.xz"), FADE_OUT)
-        G %<>% fade_text(30, 1, "CACTZ HALL OF FAME", UNICORN, FADE_OUT)
-        G %<>% show_pic(pkg_file("gfx/cactz.txt"))
+        cursor <- snazzy_scores(cursor, user_file("cactz-hs.csv.xz"), FADE_OUT)
+        cursor <- fade_text(cursor, 30, 1, "CACTZ HALL OF FAME", UNICORN, FADE_OUT)
+        cursor <- show_pic(cursor, pkg_file("gfx/cactz.txt"))
+        page <- "T"
+      }
+    }
+  }
+  cursor
+}
+
+################################################################################
+
+cactuski_title <- function(cursor, config) {
+  file.copy(pkg_file("other/cactuski-hs.csv.xz"), user_file("cactuski-hs.csv.xz"),
+            overwrite = FALSE)
+  cursor <- show_pic(cursor, pkg_file("gfx/cactuski.txt"))
+  cursor <- draw_divider(cursor, 19)
+  levels <- c(paste0(get_colour(226), "NURSERY"),
+              paste0(get_colour(33), " BLUE  "),
+              paste0(get_colour(160), "  RED  "),
+              paste0(get_colour(15, 0), " ",
+                     get_colour(0,255),"BLACK",
+                     get_colour(15, 0), " "))
+
+  lev <- 2
+
+  instr1 <- paste0(get_colour(46), "P", get_colour(15), ": PLAY   ",
+              "             ", get_colour(207), " ", get_colour(15),
+              "                       ",
+                   get_colour(196), "Q", get_colour(15), ": QUIT")
+
+  instr2 <- paste0(get_colour(159), "I", get_colour(15), ": INSTRUCTIONS   ",
+                   "    ", get_colour(207), "L", get_colour(15), ": ",
+                   levels[lev], "          ",
+                   get_colour(220), "H", get_colour(15), ": HI-SCORES   ")
+
+
+  title1 <- "CACTUSKI!"
+  cursor <- write_at(cursor, 3, 21, instr1)
+  cursor <- write_at(cursor, 3, 22, instr2)
+  cursor <- fade_text(cursor, 30, 20, title1, UNICORN, FADE_IN)
+
+  page <- "T"
+  while (TRUE) {
+    kp <- tolower(keypress::keypress(block = TRUE))
+    if (kp == "i") {
+      if (page == "I") {
+        cursor <- show_pic(cursor, pkg_file("gfx/cactuski.txt"))
+        page <- "T"
+      } else {
+        cursor <- show_pic(cursor, pkg_file("gfx/cactuski-inst.txt"))
+        page <- "I"
+      }
+    } else if (kp == "l") {
+      lev <- lev + 1
+      if (lev == 5) lev <- 1
+      instr2 <- paste0(get_colour(159), "I", get_colour(15), ": INSTRUCTIONS   ",
+                       "    ", get_colour(207), "L", get_colour(15), ": ",
+                       levels[lev], "          ",
+                       get_colour(220), "H", get_colour(15), ": HI-SCORES   ")
+
+      cursor <- write_at(cursor, 3, 22, instr2)
+
+    } else if (kp %in% c('p', 'q')) {
+      cursor <- fade_text(cursor, 30, 20, title1, UNICORN, FADE_OUT)
+      cursor <- clear_pic(cursor, 23)
+      if (kp == 'p') {
+        cursor <- cactuski(cursor, config, lev)
+        cursor <- show_pic(cursor, pkg_file("gfx/cactuski.txt"))
+        cursor <-  draw_divider(cursor, 19)
+        page <- "T"
+        cursor <- write_at(cursor, 3, 21, instr1)
+        cursor <- write_at(cursor, 3, 22, instr2)
+        cursor <- fade_text(cursor, 30, 20, title1, UNICORN, FADE_IN)
+
+      } else {
+        return(cursor)
+      }
+    } else if (kp == 'h') {
+      if (page != "H") {
+        cursor <- clear_pic(cursor, 19)
+        cursor <- fade_text(cursor, 30, 1, "CACTUSKI HALL OF FAME", UNICORN, FADE_IN)
+        cursor <- snazzy_scores(cursor, user_file("cactuski-hs.csv.xz"), FADE_IN)
+        page <- "H"
+      } else {
+        cursor <- snazzy_scores(cursor, user_file("cactuski-hs.csv.xz"), FADE_OUT)
+        cursor <- fade_text(cursor, 30, 1, "CACTUSKI HALL OF FAME", UNICORN, FADE_OUT)
+        cursor <- show_pic(cursor, pkg_file("gfx/cactuski.txt"))
         page <- "T"
       }
     }

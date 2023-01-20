@@ -1,6 +1,6 @@
 Package: cactus.purge
 Title: R-based therapeutic entertainment for weary data scientists
-Version: 1.0.5
+Version: 2.0.0
 Authors@R: 
     person(given = "Wes",
            family = "Hinsley",
@@ -12,16 +12,14 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: false
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
-Remotes: weshinsley/waitr
+RoxygenNote: 7.2.2
+Remotes: weshinsley/waitr,
 Imports: 
   R.utils, 
   stringr, 
   RCurl, 
-  magrittr, 
-  dplyr, 
   utils, 
   stats, 
-  keypress, 
+  keypress (>= 1.3.0), 
   waitr,
   audio
