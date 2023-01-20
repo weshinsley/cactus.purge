@@ -232,7 +232,7 @@ cactuski <- function(cursor, config, lev, TV_HEIGHT = 23, TV_WIDTH = 60) {
 
   # Predicting the future...
 
-  G$mscript <- read.csv(pkg_file(sprintf("other/cactuski-scripts%d.csv", lev)))
+  G$mscript <- read.csv(pkg_file(sprintf("other/cactuski-scripts%d.csv", G$lev)))
   G$mline <- NA
   G$mn <- 0
   G$mc <- 0
@@ -1548,8 +1548,8 @@ cactuski <- function(cursor, config, lev, TV_HEIGHT = 23, TV_WIDTH = 60) {
 
 ################################################################################
 # Main loop starts here...
-
-  next_frame <- waitr::waitr_timestamp() + 30
+  frame_time <- 50L - as.integer(5L * G$lev)
+  next_frame <- waitr::waitr_timestamp() + frame_time
 
   while (TRUE) {
     cactuski_check_keys()
@@ -1606,11 +1606,11 @@ cactuski <- function(cursor, config, lev, TV_HEIGHT = 23, TV_WIDTH = 60) {
     if (G$cfy >= 0) cactuski_move_finch()
 
     if (G$bossy != -1) cactuski_do_bosses()
-    next_frame <- waitr::wait_until(next_frame) + 50L
+    next_frame <- waitr::wait_until(next_frame) + frame_time
     cactuski_move_laser()
     if (G$cfy >= 0) cactuski_move_finch()
 
-    next_frame <- waitr::wait_until(next_frame) + 50L
+    next_frame <- waitr::wait_until(next_frame) + frame_time
     G$score <- G$score + 5L + G$lev
     cactuski_do_messages()
     cactuski_update_score()
