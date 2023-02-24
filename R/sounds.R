@@ -34,8 +34,8 @@ load_sound <- function(wav, config) {
 play_sound <- function(wavobj) {
   if (Sys.info()["sysname"] == "Linux") {
     if (wavobj$enable) {
-      system(paste0("paplay ", wavob$wav), ignore.stdout = TRUE,
-             ignore.stderr = TRUE, wait =)
+      system(paste0("paplay ", wavobj$wav), ignore.stdout = TRUE,
+             ignore.stderr = TRUE, wait = FALSE)
     }
     return(wavobj)
   }

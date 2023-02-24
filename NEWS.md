@@ -1,7 +1,7 @@
 # The unfolding.
 
 # The second chapter
-
+* 2.0.2 - Alternative sound for linux (paplay)
 * 2.0.1 - Better level-based speed
 * 2.0.0 - Second Chapter
 
