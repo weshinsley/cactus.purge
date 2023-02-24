@@ -12,7 +12,11 @@
 
 load_sound <- function(wav, config) {
   if (config$audio) {
-    list(wav = audio::load.wave(wav), player = NULL, enable = TRUE)
+    if (Sys.info()["sysname"] == "Linux") {
+      list(wav = wav, player = NULL, enable = TRUE)
+    } else {
+      list(wav = audio::load.wave(wav), player = NULL, enable = TRUE)
+    }
   } else {
     list(enable = FALSE)
   }
@@ -28,6 +32,16 @@ load_sound <- function(wav, config) {
 #' @return The updated list, in case the audio instance is no longer null.
 
 play_sound <- function(wavobj) {
+  if (Sys.info()["sysname"] == "Linux") {
+    if (wavobj$enable) {
+      system(paste0("paplay ", wavob$wav), ignore.stdout = TRUE,
+             ignore.stderr = TRUE, wait =)
+    }
+    return(wavobj)
+  }
+
+  # Macos / Win:
+
   stop_sound(wavobj)
   if (wavobj$enable) {
     wavobj$player <- audio::play(wavobj$wav)
@@ -44,6 +58,11 @@ play_sound <- function(wavobj) {
 #' @keywords sound
 
 stop_sound <- function(wavobj) {
+  if (Sys.info()["sysname"] == "Linux") {
+    # Can't on linux.
+    return(wavobj)
+  }
+
   if (wavobj$enable) {
     if (!is.null(wavobj$player)) {
       audio::pause(wavobj$player)
