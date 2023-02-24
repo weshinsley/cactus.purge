@@ -18,24 +18,22 @@ with both the real-time modelling, and _the purge_. It is, also, some might
 say, the pivotal moment where R at last reveals its true nature as a 
 potential retro-gaming platform. 
 
-## Requirements
+## Requirements / Issues
 
 * The package has been developed on Windows; it should also work nicely on 
   Mac OS.
 
-* On Linux, audio support is tricky. 
-  You may have some luck with `sudo apt-get install portaudio19-dev` but
-  so far it looks sketchy. Sometimes it works for a while then 
-  crashes, or sometimes the audio driver chatters onto stdout, which
-  makes a mess on the game screen and disrupts cursor control. 
-  
-  Linux users might need to turn sound off on the front page, to get a 
-  pleasant (but sadly quiet) gaming experience. I suggest in this sad case,
-  you make your own atmospheric sound effects as you play, and have a look
-  in the `inst/audio` folder for hints of what you're missing.
+* Hopefully we now have Linux audio support, via `/usr/bin/paplay` which I think is 
+  available on all ubuntu installs'. You still need to 
+  `sudo apt-get install portaudio19-dev` for now because of the
+  detection process - I will remove that later; I just didn't want
+  to delay the excitement...
 
-  Feedback or suggestions to address this terrible problem are welcome.
-  I'm not sure if WINE gives any hope?
+* I also noticed a small problem handling keys being held down in Linux;
+  the buffer is not emptying, and it takes a while for later keys to get
+  registered. For now: you don't need to do any
+  holding down of keys in the games, tempting though it is at times. I
+  will try and make this nicer too.
 
 ## Execution
 
@@ -52,9 +50,9 @@ devtools::install_github("weshinsley/cactus.purge")
 
 * From your terminal/command prompt: `Rscript -e "cactus.purge::launch()"`
 
-* Note that you can't play Cactus Purge within RStudio; it must be run from
-  a terminal-like environment - including within the command-line `R` itself 
-  if you like.
+* You can't play Cactus Purge within RStudio; it must be run from
+  a terminal-like environment that supports ANSI control codes, including 
+  command-line `R` itself if you like.
 
 * On Windows, the first time you run Cactus Purge, a registry key may
   need to be set to allow coloured output in your Command Prompt window.
