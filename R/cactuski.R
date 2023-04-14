@@ -826,6 +826,7 @@ cactuski <- function(cursor, config, lev, TV_HEIGHT = 23, TV_WIDTH = 60) {
       G$jumping <- G$jumping - 1
     }
     kp <- tolower(keypress::keypress(block = FALSE))
+    while (!is.na(keypress::keypress(block = FALSE))) {}
     if (is.na(kp)) return()
 
     if (kp == "left") {
