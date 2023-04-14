@@ -358,6 +358,7 @@ cactz <- function(cursor, config, TV_HEIGHT = 23, TV_WIDTH = 60) {
     # dropping one, and if plane is reasonable on screen
 
     kp <- keypress::keypress(block = FALSE)
+    while (!is.na(keypress::keypress(block = FALSE))) {}
 
     if (is.na(kp)) {
       return()
