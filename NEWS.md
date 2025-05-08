@@ -1,6 +1,7 @@
 # The unfolding.
 
 # The second chapter
+* 2.0.4 - Fix corrupt initial score file in chapter 2
 * 2.0.3 - Flush keyboard buffer (affected linux more)
 * 2.0.2 - Alternative sound for linux (paplay)
 * 2.0.1 - Better level-based speed
