@@ -21,19 +21,11 @@ potential retro-gaming platform.
 ## Requirements / Issues
 
 * The package has been developed on Windows; it should also work nicely on 
-  Mac OS.
+  Mac OS and Linux (tested on Ubuntu).
 
-* Hopefully we now have Linux audio support, via `/usr/bin/paplay` which I think is 
-  available on all ubuntu installs'. You still need to 
-  `sudo apt-get install portaudio19-dev` for now because of the
-  detection process - I will remove that later; I just didn't want
-  to delay the excitement...
-
-* I also noticed a small problem handling keys being held down in Linux;
-  the buffer is not emptying, and it takes a while for later keys to get
-  registered. For now: you don't need to do any
-  holding down of keys in the games, tempting though it is at times. I
-  will try and make this nicer too.
+* For linux, you need to `sudo apt-get install portaudio19-dev` for now
+  because of the sound detection process - actual sound playing leans on 
+  /usr/bin/paplay, which I believe is commonly available.
 
 ## Execution
 
@@ -71,7 +63,7 @@ REG ADD HKCU\CONSOLE /f /v VirtualTerminalLevel /t REG_DWORD /d 1
   Click Start, and begin typing `env` - you should see `Edit the System
   Environment Variables`, Click `Environment Variables`, and look for 
   `Path` in the top window. `Edit`, `New`, `Browse`, and find a folder
-  somewhat similar to `This PC: C:\Program Files\R\R-4.2.2\bin`, then 
+  somewhat similar to `This PC: C:\Program Files\R\R-4.5.1\bin`, then 
   click `OK` until everything goes away. Open a new Command Prompt and 
   try again.
 
@@ -80,7 +72,11 @@ REG ADD HKCU\CONSOLE /f /v VirtualTerminalLevel /t REG_DWORD /d 1
 * Terminals are not that fast, surprisingly. You would think writing 
   characters to a console would be speedy. Additionally, it seems that
   R sometimes incrementally slows down while playing - not clear why
-  at this stage. Restart to renew fast and slick frame rates.
+  at this stage. Restart to renew fast and slick frame rates. 
+  
+* Different terminals vary in their speed and appearance too. Find
+  one that you like on your system; there isn't really much control
+  we have from R in how the terminal behaves.
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
