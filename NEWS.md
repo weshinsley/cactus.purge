@@ -1,6 +1,7 @@
 # The unfolding.
 
 # The second chapter
+* 2.0.5 - Amazing new ASCII art for most pages
 * 2.0.4 - Fix corrupt initial score file in chapter 2
 * 2.0.3 - Flush keyboard buffer (affected linux more)
 * 2.0.2 - Alternative sound for linux (paplay)
